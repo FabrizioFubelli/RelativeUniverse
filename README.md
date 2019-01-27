@@ -1,4 +1,4 @@
 # Relative Universe
 
 ### https://www.relativeuniverse.net
-### Language: C++
+### Languages: C, C++
