@@ -1,4 +1,2 @@
-/* Set of Objects (Insieme) */
-struct set {
-    static 
-}
+#include <stdio.h>
+#include <stdbool.h>
