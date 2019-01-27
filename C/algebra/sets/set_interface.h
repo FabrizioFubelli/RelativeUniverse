@@ -13,6 +13,7 @@ typedef struct set Set;
 struct set
 {
     enum type **accepted_types;
+    const char symbol;
 };
 
 /*

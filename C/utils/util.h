@@ -27,11 +27,11 @@ long long int: t_long_long_int, unsigned long long int: t_unsigned_long_long_int
          float: t_float,                          double: t_double,                 \
   long double: t_long_double,                   char *: t_pointer_to_char,        \
        void *: t_pointer_to_void,                int *: t_pointer_to_int,         \
-          Set: t_set,                          Natural: t_natural_set,            \
+          Set: t_set,                                                             \
       Complex: t_complex_set,                Imaginary: t_imaginary_set,          \
       Integer: t_integer_set,               Irrational: t_irrational_set,         \
       Natural: t_natural_set,                 Rational: t_rational_set,           \
-         Real: t_real_set,
+         Real: t_real_set,                    Universe: t_universe_set,           \
       default: t_other)
 
 static char *str_typename(enum type t) {
@@ -94,6 +94,8 @@ static char *str_typename(enum type t) {
             return "Rational Set";
         case t_real_set:
             return "Real Set";
+        case t_universe_set:
+            return "Universe Set";
 
         default:
             return "other";
