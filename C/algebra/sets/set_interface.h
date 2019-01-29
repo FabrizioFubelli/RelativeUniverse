@@ -32,17 +32,15 @@ static bool set_includes(const Set A, const Set B) {
 /*
  * @return `A ⊃ B`
 */
-static bool set_is_included(const void *set_A, const void *set_B) {
+static bool set_is_included(const Set A, const Set B) {
     printf("set_is_included\n");
-    Set A = *(Set *) set_A;
-    Set B = *(Set *) set_B;
 }
 
 /*
  * @return `x ∊ A`
 */
-bool set_contains(const void *X, const void *x, const Type type) {
-    return (*(Set *) X).contains(x, type);
+bool set_contains(const Set X, const void *x, const Type type) {
+    return X.contains(x, type);
 }
 
 #endif

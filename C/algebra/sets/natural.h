@@ -2,24 +2,17 @@
 #ifndef algebra_sets_natural_h
 #define algebra_sets_natural_h
 
-#include <stdlib.h>
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-const bool N_contains(const void *x, const Type type);
+const bool natural_contains(const void *x, const Type type);
 
-typedef struct natural
-{
-    const char symbol;
-    const bool (*contains)(const void *, const Type);
-} Natural;
-
-const Natural N = {
+const Set N = {
     .symbol = 'N',
-    .contains = &N_contains
+    .contains = &natural_contains
 };
 
-const bool N_contains(const void *x, const Type type) {
+const bool natural_contains(const void *x, const Type type) {
     switch (type) {
         case t_unsigned_short_int:
         return true;

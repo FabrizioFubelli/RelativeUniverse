@@ -4,10 +4,30 @@
 
 #include "../../utils/util.h"
 #include "set_interface.h"
+#include "natural.h"
 
-typedef struct integer
-{
-    Set set;
-} Integer;
+const bool integer_contains(const void *x, const Type type);
+
+const Set Z = {
+    .symbol = 'Z',
+    .contains = &integer_contains
+};
+
+const bool integer_contains(const void *x, const Type type) {
+    if (N.contains(x, type)) {
+        return true;
+    }
+    switch (type) {
+        case t_short_int:
+        return true;
+        case t_int:
+        return true;
+        case t_long_int:
+        return true;
+        case t_long_long_int:
+        return true;
+    }
+    return false;
+}
 
 #endif
