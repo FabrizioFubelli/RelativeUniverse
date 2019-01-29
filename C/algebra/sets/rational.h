@@ -7,7 +7,6 @@
 
 typedef struct rational
 {
-    Set set;
 } Rational;
 
 #endif

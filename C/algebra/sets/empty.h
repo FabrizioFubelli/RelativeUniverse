@@ -7,7 +7,6 @@
 
 typedef struct empty
 {
-    Set set;
 } Empty;
 
 #endif

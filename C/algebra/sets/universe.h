@@ -5,9 +5,15 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-typedef struct universe
-{
-    Set set;
-} Universe;
+const bool universe_contains(const void *x, const Type type);
+
+const Set U = {
+    .symbol = 'U',
+    .contains = &universe_contains
+};
+
+const bool universe_contains(const void *x, const Type type) {
+    return true;
+}
 
 #endif

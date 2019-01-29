@@ -7,7 +7,6 @@
 
 typedef struct imaginary
 {
-    Set set;
 } Imaginary;
 
 #endif

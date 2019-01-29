@@ -28,9 +28,7 @@ int main() {
         printf("set_contains(R, %Lf) = %d\n", i, belongs);
     }
 
-
     set_includes(Z, N);
-
 
     return 0;
 }

@@ -7,7 +7,6 @@
 
 typedef struct complex
 {
-    Set set;
 } Complex;
 
 #endif
