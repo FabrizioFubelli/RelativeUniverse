@@ -2,6 +2,7 @@
 #define algebra_sets_sets_h
 
 #include "set_interface.h"
+#include "empty.h"
 #include "complex.h"
 #include "imaginary.h"
 #include "integer.h"

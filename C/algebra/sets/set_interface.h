@@ -5,14 +5,12 @@
 
 #include "../../utils/util.h"
 
-#define type(T)  typeof(T *)
-
 typedef struct set Set;
 
-/* Set of Objects (Insieme) */
+/* Set of Objects (Example) */
 struct set
 {
-    enum type **accepted_types;
+    const Type accepted_types[1];
     const char symbol;
 };
 
