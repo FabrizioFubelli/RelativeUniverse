@@ -15,8 +15,6 @@ typedef enum {
     t_universe_set=27, t_empty_set=28
 } Type;
 
-#include "../algebra/sets/sets.h"
-
 #define typename(x) _Generic((x),        /* Get the name of a type */              \
         _Bool: t_bool,                   unsigned char: t_unsigned_char,          \
          char: t_char,                     signed char: t_signed_char,            \
@@ -27,11 +25,6 @@ long long int: t_long_long_int, unsigned long long int: t_unsigned_long_long_int
          float: t_float,                          double: t_double,                 \
   long double: t_long_double,                   char *: t_pointer_to_char,        \
        void *: t_pointer_to_void,                int *: t_pointer_to_int,         \
-          Set: t_set,                            Empty: t_empty_set,              \
-      Complex: t_complex_set,                Imaginary: t_imaginary_set,          \
-      Integer: t_integer_set,               Irrational: t_irrational_set,         \
-      Natural: t_natural_set,                 Rational: t_rational_set,           \
-         Real: t_real_set,                    Universe: t_universe_set,           \
       default: t_other)
 
 static char *str_typename(Type t) {

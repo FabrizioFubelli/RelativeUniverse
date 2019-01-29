@@ -6,18 +6,39 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
+const bool N_contains(const void *x, const Type type);
+
 typedef struct natural
 {
     const char symbol;
-    const Type accepted_types[4];
+    const bool (*contains)(const void *, const Type);
 } Natural;
 
 const Natural N = {
     .symbol = 'N',
-    .accepted_types = {
-         t_unsigned_short_int, t_unsigned_int, t_unsigned_long_int,
-         t_unsigned_long_long_int
-     }
+    .contains = &N_contains
 };
+
+const bool N_contains(const void *x, const Type type) {
+    switch (type) {
+        case t_unsigned_short_int:
+        return true;
+        case t_unsigned_int:
+        return true;
+        case t_unsigned_long_int:
+        return true;
+        case t_unsigned_long_long_int:
+        return true;
+        case t_short_int:
+        return *((short int *) x) >= 0;
+        case t_int:
+        return *((int*) x) >= 0;
+        case t_long_int:
+        return *((long int *) x) >= 0;
+        case t_long_long_int:
+        return *((long long int *) x) >= 0;
+    }
+    return false;
+}
 
 #endif

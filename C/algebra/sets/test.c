@@ -6,27 +6,21 @@
 #include "sets.h"
 
 int main() {
-    printf("Hello Set!\n");
+    printf("Hello Sets!\n\n");
 
-    Set generic;
-    Type type_generic = typename(generic);
-    printf("type_generic: %s\n", str_typename(type_generic));
+    long long int i = 4467489989451615;
+    printf("N.contains(%lld) = %d\n", i, N.contains(&i, t_long_long_int));
 
-    Type type_N = typename(N);
-    printf("N: %s\n", str_typename(type_N));
-    printf("N.symbol: %c\n", N.symbol);
+    Set N_check = {
+        .symbol = N.symbol,
+        .contains = N.contains
+    };
 
+    bool belongs = set_contains(&N, &i, t_long_long_int);
 
-    const Type *N_accepted_types = N.accepted_types;
+    printf("set_contains(N, %lld) = %d\n", i, belongs);
 
-    Empty empty;
-    Type type_empty = typename(empty);
-    printf("type_empty: %s\n", str_typename(type_empty));
+    set_is_included(&N_check, &N);
 
-    unsigned a=100;
-    float a2= ((float) a)-5.6;
-    printf("a: %s\n", str_typename(typename(a)));
-    printf("a2 type: %s\n", str_typename(typename(a2)));
-    printf("a2: %f\n", a2);
     return 0;
 }
