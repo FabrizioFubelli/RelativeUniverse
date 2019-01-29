@@ -24,11 +24,11 @@ int main() {
     {
         long long int n = 16436238;
 
-        belongs = set_contains(E, &n, t_long_long_int);
-        printf("set_contains(E, %lld) = %d    # Even numbers\n", n, belongs);
+        belongs = belongs_to_set(&n, t_long_long_int, E);
+        printf("belongs_to_set(%lld, E) = %d    # Even numbers\n", n, belongs);
 
-        belongs = set_contains(O, &n, t_long_long_int);
-        printf("set_contains(O, %lld) = %d    # Odd numbers\n", n, belongs);
+        belongs = belongs_to_set(&n, t_long_long_int, O);
+        printf("belongs_to_set(%lld, O) = %d    # Odd numbers\n", n, belongs);
     }
 
     return 0;

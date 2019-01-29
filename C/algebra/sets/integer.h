@@ -6,15 +6,15 @@
 #include "set_interface.h"
 #include "natural.h"
 
-const bool integer_contains(const void *x, const Type x_type);
+const bool belongs_integer(const void *x, const Type x_type);
 
 static const Set Z = {
     .symbol = 'Z',
-    .contains = &integer_contains
+    .belongs = &belongs_integer
 };
 
-const bool integer_contains(const void *x, const Type x_type) {
-    if (N.contains(x, x_type)) {
+const bool belongs_integer(const void *x, const Type x_type) {
+    if (N.belongs(x, x_type)) {
         return true;
     }
     switch (x_type) {

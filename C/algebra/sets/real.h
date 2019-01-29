@@ -6,15 +6,15 @@
 #include "set_interface.h"
 #include "integer.h"
 
-const bool real_contains(const void *x, const Type x_type);
+const bool belongs_real(const void *x, const Type x_type);
 
 static const Set R = {
     .symbol = 'R',
-    .contains = &real_contains
+    .belongs = &belongs_real
 };
 
-const bool real_contains(const void *x, const Type x_type) {
-    if (Z.contains(x, x_type)) {
+const bool belongs_real(const void *x, const Type x_type) {
+    if (Z.belongs(x, x_type)) {
         return true;
     }
     switch (x_type) {

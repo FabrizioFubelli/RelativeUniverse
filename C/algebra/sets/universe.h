@@ -5,14 +5,14 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-const bool universe_contains(const void *x, const Type x_type);
+const bool belongs_universe(const void *x, const Type x_type);
 
 static const Set U = {
     .symbol = 'U',
-    .contains = &universe_contains
+    .belongs = &belongs_universe
 };
 
-const bool universe_contains(const void *x, const Type x_type) {
+const bool belongs_universe(const void *x, const Type x_type) {
     return true;
 }
 

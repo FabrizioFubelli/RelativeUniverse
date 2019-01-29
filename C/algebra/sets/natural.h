@@ -5,14 +5,14 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-const bool natural_contains(const void *x, const Type x_type);
+const bool belongs_natural(const void *x, const Type x_type);
 
 static const Set N = {
     .symbol = 'N',
-    .contains = &natural_contains
+    .belongs = &belongs_natural
 };
 
-const bool natural_contains(const void *x, const Type x_type) {
+const bool belongs_natural(const void *x, const Type x_type) {
     switch (x_type) {
         case t_unsigned_short_int:
         return true;

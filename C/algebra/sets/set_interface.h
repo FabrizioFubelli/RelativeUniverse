@@ -11,7 +11,7 @@ typedef struct set Set;
 struct set
 {
     const char symbol;
-    const bool (*contains)(const void *, const Type);
+    const bool (*belongs)(const void *, const Type);
 };
 
 /*
@@ -32,12 +32,12 @@ static bool set_is_included(const Set A, const Set B) {
  * @return `A ∩ B`
 */
 static Set set_intersection(const Set A, const Set B) {
-    const bool intersection_contains(const void * x, const Type x_type) {
-        return A.contains(x, x_type) && B.contains(x, x_type);
+    const bool belongs_intersection(const void * x, const Type x_type) {
+        return A.belongs(x, x_type) && B.belongs(x, x_type);
     }
     const Set C = {
         .symbol = 'C',
-        .contains = &intersection_contains
+        .belongs = &belongs_intersection
     };
     return C;
 }
@@ -46,12 +46,12 @@ static Set set_intersection(const Set A, const Set B) {
  * @return `A ∪ B`
 */
 static Set set_union(const Set A, const Set B) {
-    const bool union_contains(const void * x, const Type x_type) {
-        return A.contains(x, x_type) || B.contains(x, x_type);
+    const bool belongs_union(const void * x, const Type x_type) {
+        return A.belongs(x, x_type) || B.belongs(x, x_type);
     }
     const Set C = {
         .symbol = 'C',
-        .contains = &union_contains
+        .belongs = &belongs_union
     };
     return C;
 }
@@ -59,8 +59,8 @@ static Set set_union(const Set A, const Set B) {
 /*
  * @return `x ∊ A`
 */
-static bool set_contains(const Set X, const void *x, const Type x_type) {
-    return X.contains(x, x_type);
+static bool belongs_to_set(const void *x, const Type x_type, const Set X) {
+    return X.belongs(x, x_type);
 }
 
 #endif
