@@ -1,19 +1,11 @@
 #ifndef algebra_sets_set_interface_h
 #define algebra_sets_set_interface_h
 
+typedef struct set Set;
+
 #include <stdbool.h>
 
 #include "../../utils/util.h"
-
-#define setname(x) _Generic((x),        /* Get the name of a type */              \
-          Set: t_set,                            Empty: t_empty_set,              \
-      Complex: t_complex_set,                Imaginary: t_imaginary_set,          \
-      Integer: t_integer_set,               Irrational: t_irrational_set,         \
-      Natural: t_natural_set,                 Rational: t_rational_set,           \
-         Real: t_real_set,                    Universe: t_universe_set,           \
-      default: t_other)
-
-typedef struct set Set;
 
 /* Set of Objects */
 struct set
@@ -37,10 +29,38 @@ static bool set_is_included(const Set A, const Set B) {
 }
 
 /*
+ * @return `A ∩ B`
+*/
+static Set set_intersection(const Set A, const Set B) {
+    const bool intersection_contains(const void * x, const Type x_type) {
+        return A.contains(x, x_type) && B.contains(x, x_type);
+    }
+    const Set C = {
+        .symbol = 'C',
+        .contains = &intersection_contains
+    };
+    return C;
+}
+
+/*
+ * @return `A ∪ B`
+*/
+static Set set_union(const Set A, const Set B) {
+    const bool union_contains(const void * x, const Type x_type) {
+        return A.contains(x, x_type) || B.contains(x, x_type);
+    }
+    const Set C = {
+        .symbol = 'C',
+        .contains = &union_contains
+    };
+    return C;
+}
+
+/*
  * @return `x ∊ A`
 */
-bool set_contains(const Set X, const void *x, const Type type) {
-    return X.contains(x, type);
+static bool set_contains(const Set X, const void *x, const Type x_type) {
+    return X.contains(x, x_type);
 }
 
 #endif

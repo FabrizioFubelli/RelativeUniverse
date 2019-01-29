@@ -8,7 +8,7 @@
 
 const bool integer_contains(const void *x, const Type type);
 
-const Set Z = {
+static const Set Z = {
     .symbol = 'Z',
     .contains = &integer_contains
 };

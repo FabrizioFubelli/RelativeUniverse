@@ -5,9 +5,4 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-typedef struct irrational
-{
-    Set set;
-} Irrational;
-
 #endif

@@ -18,7 +18,7 @@ int main() {
         printf("set_contains(N, %lld) = %d\n", i, belongs);
     }
 
-    {
+    /*{
         long double i = 1023.123;
 
         belongs = set_contains(Z, &i, t_long_double);
@@ -28,7 +28,7 @@ int main() {
         printf("set_contains(R, %Lf) = %d\n", i, belongs);
     }
 
-    set_includes(Z, N);
+    set_includes(Z, N);*/
 
     return 0;
 }

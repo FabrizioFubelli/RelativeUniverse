@@ -7,7 +7,7 @@
 
 const bool universe_contains(const void *x, const Type type);
 
-const Set U = {
+static const Set U = {
     .symbol = 'U',
     .contains = &universe_contains
 };

@@ -8,7 +8,7 @@
 
 const bool real_contains(const void *x, const Type type);
 
-const Set R = {
+static const Set R = {
     .symbol = 'R',
     .contains = &real_contains
 };

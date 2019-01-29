@@ -7,7 +7,7 @@
 
 const bool natural_contains(const void *x, const Type type);
 
-const Set N = {
+static const Set N = {
     .symbol = 'N',
     .contains = &natural_contains
 };

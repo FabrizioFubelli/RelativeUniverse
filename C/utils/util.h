@@ -10,10 +10,10 @@ typedef enum {
     t_float=13,
     t_double=14, t_long_double=15,
     t_pointer_to_char=16, t_pointer_to_void=17, t_pointer_to_int=18,
-    t_set=19, t_complex_set=20, t_imaginary_set=21, t_integer_set=22,
-    t_irrational_set=23, t_natural_set=24, t_rational_set=25, t_real_set=26,
-    t_universe_set=27, t_empty_set=28
+    t_set=19
 } Type;
+
+#include "../algebra/sets/set_interface.h"
 
 #define typename(x) _Generic((x),        /* Get the name of a type */              \
         _Bool: t_bool,                   unsigned char: t_unsigned_char,          \
@@ -25,7 +25,7 @@ long long int: t_long_long_int, unsigned long long int: t_unsigned_long_long_int
          float: t_float,                          double: t_double,                 \
   long double: t_long_double,                   char *: t_pointer_to_char,        \
        void *: t_pointer_to_void,                int *: t_pointer_to_int,         \
-      default: t_other)
+          Set: t_set,                          default: t_other)
 
 static char *str_typename(Type t) {
     switch (t) {
@@ -73,24 +73,6 @@ static char *str_typename(Type t) {
         case t_set:
             return "Set";
 
-        case t_complex_set:
-            return "Complex Set";
-        case t_imaginary_set:
-            return "Imaginary Set";
-        case t_integer_set:
-            return "Integer Set";
-        case t_irrational_set:
-            return "Irrational Set";
-        case t_natural_set:
-            return "Natural Set";
-        case t_rational_set:
-            return "Rational Set";
-        case t_real_set:
-            return "Real Set";
-        case t_universe_set:
-            return "Universe Set";
-        case t_empty_set:
-            return "Empty Set";
         default:
             return "other";
     }

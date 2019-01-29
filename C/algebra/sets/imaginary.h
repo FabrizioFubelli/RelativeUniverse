@@ -5,8 +5,4 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-typedef struct imaginary
-{
-} Imaginary;
-
 #endif
