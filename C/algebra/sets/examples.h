@@ -5,7 +5,22 @@
 #include "../../utils/util.h"
 #include "sets.h"
 
+const bool even_contains(const void *x, const Type x_type);
+const bool odd_contains(const void *x, const Type x_type);
+
 // Example of all even natural numbers
+const static Set E = {
+    .symbol = 'E',
+    .contains = &even_contains
+};
+
+// Example of all odd natural numbers
+const static Set O = {
+    .symbol = 'O',
+    .contains = &odd_contains
+};
+
+
 const bool even_contains(const void *x, const Type x_type) {
     if (!N.contains(x, x_type)) {
         return false;
@@ -30,18 +45,9 @@ const bool even_contains(const void *x, const Type x_type) {
     }
     return false;
 }
-const static Set E = {
-    .symbol = 'E',
-    .contains = &even_contains
-};
 
-// Example of all odd natural numbers
 const bool odd_contains(const void *x, const Type x_type) {
     return N.contains(x, x_type) && !E.contains(x, x_type);
 }
-const static Set O = {
-    .symbol = 'O',
-    .contains = &odd_contains
-};
 
 #endif
