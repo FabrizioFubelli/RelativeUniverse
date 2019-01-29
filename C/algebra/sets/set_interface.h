@@ -18,14 +18,14 @@ struct set
  * @return `A ⊂ B`
 */
 static bool set_includes(const Set A, const Set B) {
-    printf("set_includes\n");
+    printf("NOT IMPLEMENTED\n");
 }
 
 /*
  * @return `A ⊃ B`
 */
 static bool set_is_included(const Set A, const Set B) {
-    printf("set_is_included\n");
+    printf("NOT IMPLEMENTED\n");
 }
 
 /*

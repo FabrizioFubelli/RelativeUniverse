@@ -2,33 +2,30 @@
 
 #include "../../utils/util.h"
 #include "sets.h"
+#include "examples.h"
 
 int main() {
     printf("Hello Sets!\n\n");
 
+    /*
+     * N = Natural numbers
+     * Z = Integers
+     * R = Real numbers
+     * E = Even numbers
+     * O = Odd numbers
+     */
+
     bool belongs;
 
     {
-        long long int i = -4469989451615;
+        long long int n = 16436238;
 
-        belongs = set_contains(Z, &i, t_long_long_int);
-        printf("set_contains(Z, %lld) = %d\n", i, belongs);
+        belongs = set_contains(E, &n, t_long_long_int);
+        printf("set_contains(E, %lld) = %d    # Even numbers\n", n, belongs);
 
-        belongs = set_contains(N, &i, t_long_long_int);
-        printf("set_contains(N, %lld) = %d\n", i, belongs);
+        belongs = set_contains(O, &n, t_long_long_int);
+        printf("set_contains(O, %lld) = %d    # Odd numbers\n", n, belongs);
     }
-
-    /*{
-        long double i = 1023.123;
-
-        belongs = set_contains(Z, &i, t_long_double);
-        printf("set_contains(Z, %Lf) = %d\n", i, belongs);
-
-        belongs = set_contains(R, &i, t_long_double);
-        printf("set_contains(R, %Lf) = %d\n", i, belongs);
-    }
-
-    set_includes(Z, N);*/
 
     return 0;
 }

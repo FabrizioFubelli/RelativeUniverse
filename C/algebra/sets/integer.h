@@ -6,18 +6,18 @@
 #include "set_interface.h"
 #include "natural.h"
 
-const bool integer_contains(const void *x, const Type type);
+const bool integer_contains(const void *x, const Type x_type);
 
 static const Set Z = {
     .symbol = 'Z',
     .contains = &integer_contains
 };
 
-const bool integer_contains(const void *x, const Type type) {
-    if (N.contains(x, type)) {
+const bool integer_contains(const void *x, const Type x_type) {
+    if (N.contains(x, x_type)) {
         return true;
     }
-    switch (type) {
+    switch (x_type) {
         case t_short_int:
         return true;
         case t_int:

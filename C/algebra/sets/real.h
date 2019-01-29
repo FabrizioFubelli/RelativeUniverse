@@ -6,18 +6,18 @@
 #include "set_interface.h"
 #include "integer.h"
 
-const bool real_contains(const void *x, const Type type);
+const bool real_contains(const void *x, const Type x_type);
 
 static const Set R = {
     .symbol = 'R',
     .contains = &real_contains
 };
 
-const bool real_contains(const void *x, const Type type) {
-    if (Z.contains(x, type)) {
+const bool real_contains(const void *x, const Type x_type) {
+    if (Z.contains(x, x_type)) {
         return true;
     }
-    switch (type) {
+    switch (x_type) {
         case t_float:
         return true;
         case t_double:
