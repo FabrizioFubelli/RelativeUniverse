@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #include "../../utils/util.h"
 #include "sets.h"
@@ -6,6 +7,9 @@
 
 int main() {
     printf("Hello Sets!\n\n");
+    long double d = sqrt(2);
+    printf("sqrt(2) = %Lf\n", d);
+    printf("typename(sqrt(2)) = %s\n", str_typename(typename(d)));
 
     /*
      * N = Natural numbers
