@@ -6,8 +6,6 @@
 
 typedef long double Number;
 
-#include "../algebra/sets/set_interface.h"
-
 static Number get_number_string(const char *n_string) {
     const Number number = strtold(n_string, NULL);
     return number;
