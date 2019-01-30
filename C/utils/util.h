@@ -2,6 +2,7 @@
 #define utils_util_h
 
 #include <stdlib.h>
+#include <string.h>
 
 typedef enum {
     t_other=0,
@@ -86,11 +87,9 @@ static char *str_typename(Type t) {
 }
 
 static Number get_number(void *n, Type t) {
+    printf("get_number(void *, %s)\n", str_typename(t));
     char n_string[65];
     switch (t) {
-        case t_number:
-        return *(Number *) n;
-
         case t_unsigned_short_int:
         snprintf(n_string, 64, "%hu", *(unsigned short int *) n);
         break;
@@ -132,16 +131,39 @@ static Number get_number(void *n, Type t) {
         break;
 
         case t_long_double:
+        free(n);
+        return *(Number *) n;
+
+        case t_number:
+        free(n);
         return *(Number *) n;
 
         default:
         printf("type %s is not a number!\n", str_typename(t));
+        free(n);
         return 0;
     }
-    //printf("Number (char *): %s\n", n_string);
+    printf("String (Lf): %s\n", n_string);
     Number n_new = strtold(n_string, NULL);
-    //printf("Number (Lf): %Lf\n", n_new);
+    printf("Number (Lf): %Lf\n", n_new);
+    free(n);
     return n_new;
 }
+
+
+#define CACHE_ALIGNMENT 16
+
+#define get_number2(x_pointer, x)  \
+    _Generic((x),        /* Get the name of a type */                                                                               \
+    short int: get_number(x_pointer, t_short_int),      unsigned short int: get_number(x_pointer, t_unsigned_short_int),            \
+          int: get_number(x_pointer, t_int),            unsigned int: get_number(x_pointer, t_unsigned_int),                        \
+     long int: get_number(x_pointer, t_long_int),       unsigned long int: get_number(x_pointer, t_unsigned_long_int),              \
+long long int: get_number(x_pointer, t_long_long_int),  unsigned long long int: get_number(x_pointer, t_unsigned_long_long_int),    \
+         float: get_number(x_pointer, t_float),           double: get_number(x_pointer, t_double),                                    \
+  long double: get_number(x_pointer, t_long_double),    default: get_number(x_pointer, t_other))
+
+
+
+#define get_number1(x) get_number2(memcpy(aligned_alloc(sizeof(x), CACHE_ALIGNMENT), &x, CACHE_ALIGNMENT), x)
 
 #endif

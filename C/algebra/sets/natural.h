@@ -5,32 +5,18 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-const bool belongs_natural(const void *x, const Type x_type);
+const bool belongs_natural(const Number x);
 
 static const Set N = {
     .symbol = 'N',
-    .belongs = &belongs_natural
+    .belongs2 = &belongs_natural
 };
 
-const bool belongs_natural(const void *x, const Type x_type) {
-    switch (x_type) {
-        case t_unsigned_short_int:
-        return true;
-        case t_unsigned_int:
-        return true;
-        case t_unsigned_long_int:
-        return true;
-        case t_unsigned_long_long_int:
-        return true;
-        case t_short_int:
-        return *((short int *) x) >= 0;
-        case t_int:
-        return *((int*) x) >= 0;
-        case t_long_int:
-        return *((long int *) x) >= 0;
-        case t_long_long_int:
-        return *((long long int *) x) >= 0;
-    }
+const bool belongs_natural(const Number x) {
+    long long int int_part = (long long int) x;
+    Number dec_part = x - int_part;
+    printf("belongs_natural(x) -> int=%lld, decimal=%Lf\n", int_part, dec_part);
+    //double fractional = modf(x, &integral);
     return false;
 }
 

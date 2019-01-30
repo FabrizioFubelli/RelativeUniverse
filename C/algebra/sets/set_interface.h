@@ -12,6 +12,7 @@ struct set
 {
     const char symbol;
     const bool (*belongs)(const void *, const Type);
+    const bool (*belongs2)(const Number n);
 };
 
 /*

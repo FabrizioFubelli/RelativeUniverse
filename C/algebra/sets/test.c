@@ -15,6 +15,14 @@ int main() {
      * E = Even numbers
      * O = Odd numbers
      */
+
+     int x = 123456;
+     printf("get_number1(%d) = %Lf\n\n", x, get_number1(x));
+
+     //printf("N.belongs2(%Lf) = %d\n", n, N.belongs2(n));
+
+     //n = get_number1(9203000000000000000.31443134);
+     //printf("N.belongs2(%Lf) = %d\n", n, N.belongs2(n));
 }
 
 
@@ -67,5 +75,4 @@ void test_numbers() {
     long double n10 = 9000000000000000000;
     printf("long double n = %Lf\n", n10);
     cast(&n10, t_long_double);
-    return 0;
 }
