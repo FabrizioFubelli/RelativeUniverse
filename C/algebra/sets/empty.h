@@ -9,11 +9,14 @@ const bool belongs_empty(const Number x);
 
 static const Set E = {
     .symbol = 'E',
-    .belongs = &belongs_empty
+    .parent = &U,
+    .belongs = &belongs_empty,
+    .rules_tot = 1,
+    .rules = {EMPTY}
 };
 
 const bool belongs_empty(const Number x) {
-    return false;
+    return belongs_to_set(x, E);
 }
 
 #endif

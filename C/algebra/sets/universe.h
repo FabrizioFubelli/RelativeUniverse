@@ -9,11 +9,14 @@ const bool belongs_universe(const Number x);
 
 static const Set U = {
     .symbol = 'U',
-    .belongs = &belongs_universe
+    .parent = NULL,
+    .belongs = &belongs_universe,
+    .rules_tot = 0,
+    .rules = {}
 };
 
 const bool belongs_universe(const Number x) {
-    return true;
+    return belongs_to_set(x, U);
 }
 
 #endif

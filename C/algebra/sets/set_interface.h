@@ -7,12 +7,18 @@ typedef struct set Set;
 
 #include "../../utils/util.h"
 
+
 /* Set of Objects */
 struct set
 {
     const char symbol;
+    const Set *parent;
     const bool (*belongs)(const Number n);
+    const unsigned int rules_tot;
+    const unsigned int rules[];
 };
+
+#include "set_rules.h"
 
 /*
  * @return `A ⊆ B`
@@ -81,7 +87,15 @@ static Set set_power(const Set X) {
  * @return `x ∊ A`
 */
 static bool belongs_to_set(const Number x, const Set X) {
-    return X.belongs(x);
+    if (X.parent != NULL && !X.parent->belongs(x)) {
+        return false;
+    }
+    for (unsigned int i=0; i<X.rules_tot; i++) {
+        if (!SET_RULES[X.rules[i]](X, x)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 #endif

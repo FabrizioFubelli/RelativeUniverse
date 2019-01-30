@@ -10,12 +10,14 @@ const bool belongs_real(const Number x);
 
 static const Set R = {
     .symbol = 'R',
-    .belongs = &belongs_real
+    .parent = &U,
+    .belongs = &belongs_real,
+    .rules_tot = 0,
+    .rules = {}
 };
 
 const bool belongs_real(const Number x) {
-    // Check complex, imaginary ?
-    return U.belongs(x);
+    return belongs_to_set(x, R);
 }
 
 #endif

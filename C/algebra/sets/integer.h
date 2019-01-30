@@ -10,11 +10,14 @@ const bool belongs_integer(const Number x);
 
 static const Set Z = {
     .symbol = 'Z',
-    .belongs = &belongs_integer
+    .parent = &R,
+    .belongs = &belongs_integer,
+    .rules_tot = 1,
+    .rules = {ONLY_INTEGERS}
 };
 
 const bool belongs_integer(const Number x) {
-    return R.belongs(x) && (x - ((long long int) x)) == 0;
+    return belongs_to_set(x, Z);
 }
 
 #endif

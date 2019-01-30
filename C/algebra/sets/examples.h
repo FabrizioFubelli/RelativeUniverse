@@ -2,31 +2,34 @@
 #ifndef algebra_sets_examples_h
 #define algebra_sets_examples_h
 
-#include <math.h>
 #include "../../utils/util.h"
-#include "sets.h"
+#include "natural.h"
 
 const bool belongs_even(Number x);
 const bool belongs_odd(const Number x);
 
-
 // Example of all even natural numbers
 const static Set P = {
     .symbol = 'P',
-    .belongs = &belongs_even
+    .parent = &N,
+    .belongs = &belongs_even,
+    .rules_tot = 1,
+    .rules = {ONLY_EVEN}
 };
 const bool belongs_even(Number x) {
-    return N.belongs(x) && remainder(x, 2) == 0;
+    return belongs_to_set(x, P);
 }
-
 
 // Example of all odd natural numbers
 const static Set D = {
     .symbol = 'D',
-    .belongs = &belongs_odd
+    .parent = &N,
+    .belongs = &belongs_odd,
+    .rules_tot = 1,
+    .rules = {ONLY_ODD}
 };
 const bool belongs_odd(const Number x) {
-    return N.belongs(x) && !P.belongs(x);
+    return belongs_to_set(x, D);
 }
 
 #endif

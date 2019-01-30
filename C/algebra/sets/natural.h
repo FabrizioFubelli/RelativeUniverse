@@ -10,11 +10,14 @@ const bool belongs_natural(const Number x);
 
 static const Set N = {
     .symbol = 'N',
-    .belongs = &belongs_natural
+    .parent = &Z,
+    .belongs = &belongs_natural,
+    .rules_tot = 1,
+    .rules = {ONLY_NATURAL}
 };
 
 const bool belongs_natural(const Number x) {
-    return Z.belongs(x) && x >= (Number) 0;
+    return belongs_to_set(x, N);
 }
 
 #endif
