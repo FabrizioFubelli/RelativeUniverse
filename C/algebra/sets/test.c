@@ -27,21 +27,22 @@ int main() {
 
 
 void test_sets() {
-    #define SETS 3
-    #define NUMBERS 5
+    #define SETS 4
+    #define NUMBERS 8
 
     printf("SETS = %hd\n", SETS);
-    const char sets[SETS] = {'N', 'Z', 'E'};
+    const char sets[SETS] = {'N', 'Z', 'E', 'O'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
-        1239489, 242.1234, -1324412, -13244.213313589, 1234567891234.01
+        1239489, 242.1234, -1324412, -13244.213313589,
+        1234567891234.01, 9980, 182000.15, 214808905988
     };
 
     for (short i=0; i<SETS; i++) {
         printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
         for (short j=0; j<NUMBERS; j++) {
-            bool result;
+            bool err = 0, result;
             switch (sets[i]) {
                 case 'N':
                 result = N.belongs(numbers[j]);
@@ -52,7 +53,15 @@ void test_sets() {
                 case 'E':
                 result = E.belongs(numbers[j]);
                 break;
+                case 'O':
+                result = O.belongs(numbers[j]);
+                break;
+                default:
+                printf("INVALID SET SYMBOL\n\n");
+                err = true;
+                break;
             }
+            if (err) { break; }
             printf("%c.belongs(%Lf) = %d\n\n", sets[i], numbers[j], result);
         }
     }
