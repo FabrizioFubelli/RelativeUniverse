@@ -6,17 +6,33 @@
 #include "set_interface.h"
 
 const bool belongs_empty(const Number x);
+const unsigned int *rules_empty();
 
 static const Set E = {
     .symbol = 'E',
-    .parent = &U,
     .belongs = &belongs_empty,
-    .rules_tot = 1,
-    .rules = {EMPTY}
+    .relations_length = 1,
+    .relations = {
+        {
+            .A = NULL,
+            .B = NULL,
+            .type = AND,
+            .rules_tot = 1,
+            .get_rule_numbers = rules_empty
+        }
+    }
 };
 
 const bool belongs_empty(const Number x) {
     return belongs_to_set(x, E);
+}
+
+const unsigned int *rules_empty() {
+    const unsigned int rule_numbers[] = { EMPTY };
+    return rule_numbers;
+    /*
+    void *p = malloc(sizeof(Rule) * 1);
+    return (Rule *) memcpy(p, EMPTY, sizeof(EMPTY));*/
 }
 
 #endif

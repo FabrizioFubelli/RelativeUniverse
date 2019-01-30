@@ -3,7 +3,7 @@
 
 #include "../../utils/util.h"
 #include "sets.h"
-#include "examples.h"
+//#include "examples.h"
 
 void test_numbers();
 void test_sets();
@@ -24,51 +24,48 @@ int main() {
 
 }
 
-
-
 void test_sets() {
-    #define SETS 6
-    #define NUMBERS 8
+    #define SETS 2
+    #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
-    const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
+    //const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
+    const char sets[SETS] = {'U', 'R'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
-        1239489, 242.1234, -1324412, -13244.213313589,
-        1234567891234.01, 9980, 182000.15, 214808905988
+        1234, 123.9087, -190, -43.322, 2148089043243
     };
 
-    for (short i=0; i<SETS; i++) {
+    /*void print_relation(Relation relation) {
+
+    }*/
+
+
+
+
+    for (unsigned short i=0; i<SETS; i++) {
         printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
-        for (short j=0; j<NUMBERS; j++) {
-            bool err = 0, result;
-            switch (sets[i]) {
-                case 'N':
-                result = N.belongs(numbers[j]);
-                break;
-                case 'Z':
-                result = Z.belongs(numbers[j]);
-                break;
-                case 'P':
-                result = P.belongs(numbers[j]);
-                break;
-                case 'D':
-                result = D.belongs(numbers[j]);
-                break;
-                case 'E':
-                result = E.belongs(numbers[j]);
-                break;
-                case 'R':
-                result = R.belongs(numbers[j]);
-                break;
-                default:
-                printf("INVALID SET SYMBOL\n\n");
-                err = true;
-                break;
-            }
-            if (err) { break; }
-            printf("%c.belongs(%Lf) = %d\n\n", sets[i], numbers[j], result);
+
+        Set *set_pointer;
+        if (sets[i] == 'R') {
+            set_pointer = &R;
+        } else if (sets[i] == 'U') {
+            set_pointer = &U;
+        } else {
+            printf("SET %c NOT VALID!\n", sets[i]);
+            continue;
+        }
+        Set set = *set_pointer;
+
+        for (unsigned int j=0; j<set.relations_length; j++) {
+            printf("Relation %u\n", j);
+            Relation r = set.relations[j];
+            //print_relation(r);
+        }
+        for (unsigned short k=0; k<NUMBERS; k++) {
+            Number n = numbers[k];
+            printf("%c.belongs(%Lf) = %d\n\n", sets[i], n, set.belongs(n));
         }
     }
 }

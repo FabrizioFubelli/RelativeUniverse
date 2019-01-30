@@ -7,17 +7,29 @@
 #include "universe.h"
 
 const bool belongs_real(const Number x);
+const unsigned int *rules_real();
 
 static const Set R = {
     .symbol = 'R',
-    .parent = &U,
     .belongs = &belongs_real,
-    .rules_tot = 0,
-    .rules = {}
+    .relations_length = 1,
+    .relations = {
+        {
+            .A = &U,
+            .B = &E,
+            .type = OR,
+            .rules_tot = 0,
+            .get_rule_numbers = rules_real
+        }
+    }
 };
 
 const bool belongs_real(const Number x) {
     return belongs_to_set(x, R);
+}
+
+const unsigned int *rules_real() {
+    return NULL;
 }
 
 #endif
