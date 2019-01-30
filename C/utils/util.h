@@ -1,6 +1,8 @@
 #ifndef utils_util_h
 #define utils_util_h
 
+#include <stdlib.h>
+
 typedef enum {
     t_other=0,
     t_bool=1,
@@ -10,8 +12,13 @@ typedef enum {
     t_float=13,
     t_double=14, t_long_double=15,
     t_pointer_to_char=16, t_pointer_to_void=17, t_pointer_to_int=18,
-    t_set=19
+    t_set=19, t_number=20
 } Type;
+
+typedef long double Number;
+
+static Number get_number(void *n, Type t);
+static char *str_typename(Type t);
 
 #include "../algebra/sets/set_interface.h"
 
@@ -76,6 +83,65 @@ static char *str_typename(Type t) {
         default:
             return "other";
     }
+}
+
+static Number get_number(void *n, Type t) {
+    char n_string[65];
+    switch (t) {
+        case t_number:
+        return *(Number *) n;
+
+        case t_unsigned_short_int:
+        snprintf(n_string, 64, "%hu", *(unsigned short int *) n);
+        break;
+
+        case t_unsigned_int:
+        snprintf(n_string, 64, "%u", *(unsigned int *) n);
+        break;
+
+        case t_unsigned_long_int:
+        snprintf(n_string, 64, "%lu", *(unsigned long int *) n);
+        break;
+
+        case t_unsigned_long_long_int:
+        snprintf(n_string, 64, "%llu", *(unsigned long long int *) n);
+        break;
+
+        case t_short_int:
+        snprintf(n_string, 64, "%hd", *(short int *) n);
+        break;
+
+        case t_int:
+        snprintf(n_string, 64, "%d", *(int *) n);
+        break;
+
+        case t_long_int:
+        snprintf(n_string, 64, "%ld", *(long int *) n);
+        break;
+
+        case t_long_long_int:
+        snprintf(n_string, 64, "%lld", *(long long int *) n);
+        break;
+
+        case t_float:
+        snprintf(n_string, 64, "%f", *(float *) n);
+        break;
+
+        case t_double:
+        snprintf(n_string, 64, "%f", *(double *) n);
+        break;
+
+        case t_long_double:
+        return *(Number *) n;
+
+        default:
+        printf("type %s is not a number!\n", str_typename(t));
+        return 0;
+    }
+    //printf("Number (char *): %s\n", n_string);
+    Number n_new = strtold(n_string, NULL);
+    //printf("Number (Lf): %Lf\n", n_new);
+    return n_new;
 }
 
 #endif
