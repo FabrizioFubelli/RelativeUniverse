@@ -17,8 +17,8 @@ struct relation
     const Set *A;
     const Set *B;
     const RelactionType type;
-    const unsigned int rules_tot;
-    const rules_fun get_rule_numbers;
+    const unsigned int rules_length;
+    const unsigned int *(*get_rule_indexes)();
 };
 
 #endif

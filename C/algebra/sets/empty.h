@@ -5,29 +5,34 @@
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-const bool belongs_empty(const Number x);
-const unsigned int *rules_empty();
+static const bool belongs_empty(const Number x);
+static const unsigned int *rules_empty();
+static const Relation *relations_empty();
 
 static const Set E = {
     .symbol = 'E',
     .belongs = &belongs_empty,
     .relations_length = 1,
-    .relations = {
-        {
-            .A = NULL,
-            .B = NULL,
-            .type = AND,
-            .rules_tot = 1,
-            .get_rule_numbers = rules_empty
-        }
-    }
+    .relations = &relations_empty
 };
 
-const bool belongs_empty(const Number x) {
+static const bool belongs_empty(const Number x) {
     return belongs_to_set(x, E);
 }
 
-const unsigned int *rules_empty() {
+static const Relation *relations_empty() {
+    const Relation r = {
+        .A = NULL,
+        .B = NULL,
+        .type = AND,
+        .rules_length = 1,
+        .get_rule_indexes = &rules_empty
+    };
+    const Relation relations[] = { r };
+    return relations;
+}
+
+static const unsigned int *rules_empty() {
     const unsigned int rule_numbers[] = { EMPTY };
     return rule_numbers;
     /*

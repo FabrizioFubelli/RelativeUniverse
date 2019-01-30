@@ -8,30 +8,30 @@
 #include "set_relations.h"
 #include "set_rules.h"
 
-const bool belongs_universe(const Number x);
-const unsigned int *rules_universe();
+static const bool belongs_universe(const Number x);
+static const unsigned int *rules_universe();
+static const Relation *relations_universe();
 
 static const Set U = {
     .symbol = 'U',
     .belongs = &belongs_universe,
     .relations_length = 0,
-    .relations = {
-        {
-            .A = NULL,
-            .B = NULL,
-            .type = AND,
-            .rules_tot = 0,
-            .get_rule_numbers = rules_universe
-        }
-    }
+    .relations = &relations_universe
 };
 
-const bool belongs_universe(const Number x) {
+static const bool belongs_universe(const Number x) {
     return belongs_to_set(x, U);
 }
 
-const unsigned int *rules_universe() {
+static const Relation *relations_universe() {
+    const Relation relations[0];
+    return relations;
+}
+
+static const unsigned int *rules_universe() {
     return NULL;
 }
+
+
 
 #endif

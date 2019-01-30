@@ -25,12 +25,12 @@ int main() {
 }
 
 void test_sets() {
-    #define SETS 2
+    #define SETS 3
     #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
     //const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
-    const char sets[SETS] = {'U', 'R'};
+    const char sets[SETS] = {'U', 'R', 'E'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -52,15 +52,33 @@ void test_sets() {
             set_pointer = &R;
         } else if (sets[i] == 'U') {
             set_pointer = &U;
+        } else if (sets[i] == 'E') {
+            set_pointer = &E;
         } else {
             printf("SET %c NOT VALID!\n", sets[i]);
             continue;
         }
-        Set set = *set_pointer;
-
+        const Set set = *set_pointer;
+        const Relation *set_relations = set.relations();
+        printf("Relations length %u\n", set.relations_length);
         for (unsigned int j=0; j<set.relations_length; j++) {
             printf("Relation %u\n", j);
-            Relation r = set.relations[j];
+            const Relation relation = set_relations[j];
+            printf("    |--Type: %s\n", relation.type == OR ? "OR" : "AND");
+            printf("    |--A (assigned): %s\n", relation.A != NULL ? "Yes" : "No");
+            printf("    |--B (assigned): %s\n", relation.B != NULL ? "Yes" : "No");
+            printf("    |--N. Rules: %u\n", relation.rules_length);
+
+            const unsigned int rules = relation.get_rule_indexes();
+            printf("\n");
+            /*if (r.rules_tot > 0) {
+                unsigned int *set_rules = r.get_rule_numbers();
+                printf("    |--Rules:\n");
+                for (unsigned int m=0; m<r.rules_tot; m++) {
+                    printf("         |--Number: %u\n", set_rules[m]);
+                }
+            }*/
+
             //print_relation(r);
         }
         for (unsigned short k=0; k<NUMBERS; k++) {

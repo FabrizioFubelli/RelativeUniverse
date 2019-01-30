@@ -4,6 +4,7 @@
 typedef struct set Set;
 
 #include <stdbool.h>
+#include <stdarg.h>
 
 #include "../../utils/util.h"
 #include "set_relations.h"
@@ -14,7 +15,9 @@ struct set
     const char symbol;
     const bool (*belongs)(const Number n);
     const unsigned int relations_length;
-    const Relation relations[];
+    //const Relation relations[];
+    const Relation *(*relations)();
+    const Relation *relations2[];
 };
 
 #include "set_rules.h"
@@ -110,6 +113,47 @@ static bool belongs_to_set(const Number x, const Set X) {
         }
     }
     return true;*/
+}
+
+
+static Relation *get_relations(int num, ...) {
+    va_list valist;
+    unsigned int i;
+
+    Relation *relations = (Relation *) malloc(sizeof(Relation)*num);
+
+    /* initialize valist for num number of arguments */
+    va_start(valist, num);
+
+    /* access all the arguments assigned to valist */
+    for (i = 0; i < num; i++) {
+        Relation r = va_arg(valist, Relation);
+        memcpy(relations+i, &r, sizeof(r));
+    }
+
+    /* clean memory reserved for valist */
+    va_end(valist);
+    return relations;
+}
+
+static unsigned int *get_rules(int num, ...) {
+    va_list valist;
+    unsigned int i;
+
+    unsigned int *rules = (unsigned int *) malloc(sizeof(unsigned int)*num);
+
+    /* initialize valist for num number of arguments */
+    va_start(valist, num);
+
+    /* access all the arguments assigned to valist */
+    for (i = 0; i < num; i++) {
+        unsigned int r = va_arg(valist, unsigned int);
+        memcpy(rules+i, &r, sizeof(r));
+    }
+
+    /* clean memory reserved for valist */
+    va_end(valist);
+    return rules;
 }
 
 #endif
