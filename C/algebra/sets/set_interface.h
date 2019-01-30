@@ -11,8 +11,7 @@ typedef struct set Set;
 struct set
 {
     const char symbol;
-    const bool (*belongs)(const void *, const Type);
-    const bool (*belongs2)(const Number n);
+    const bool (*belongs)(const Number n);
 };
 
 /*
@@ -47,8 +46,8 @@ static bool is_proper_superset(const Set A, const Set B) {
  * @return `A ∩ B`
 */
 static Set set_intersection(const Set A, const Set B) {
-    const bool belongs_intersection(const void * x, const Type x_type) {
-        return A.belongs(x, x_type) && B.belongs(x, x_type);
+    const bool belongs_intersection(Number x) {
+        return A.belongs(x) && B.belongs(x);
     }
     const Set C = {
         .symbol = 'C',
@@ -61,8 +60,8 @@ static Set set_intersection(const Set A, const Set B) {
  * @return `A ∪ B`
 */
 static Set set_union(const Set A, const Set B) {
-    const bool belongs_union(const void * x, const Type x_type) {
-        return A.belongs(x, x_type) || B.belongs(x, x_type);
+    const bool belongs_union(Number x) {
+        return A.belongs(x) || B.belongs(x);
     }
     const Set C = {
         .symbol = 'C',
@@ -81,8 +80,8 @@ static Set set_power(const Set X) {
 /*
  * @return `x ∊ A`
 */
-static bool belongs_to_set(const void *x, const Type x_type, const Set X) {
-    return X.belongs(x, x_type);
+static bool belongs_to_set(const Number x, const Set X) {
+    return X.belongs(x);
 }
 
 #endif
