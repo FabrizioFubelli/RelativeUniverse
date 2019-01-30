@@ -11,9 +11,9 @@ static const Relation *relations_empty();
 
 static const Set E = {
     .symbol = 'E',
-    .belongs = &belongs_empty,
     .relations_length = 1,
-    .relations = &relations_empty
+    .belongs = &belongs_empty,
+    //.relations = &relations_empty
 };
 
 static const bool belongs_empty(const Number x) {

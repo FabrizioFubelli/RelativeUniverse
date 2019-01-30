@@ -13,11 +13,10 @@ typedef struct set Set;
 struct set
 {
     const char symbol;
-    const bool (*belongs)(const Number n);
     const unsigned int relations_length;
-    //const Relation relations[];
-    const Relation *(*relations)();
-    const Relation *relations2[];
+    const bool (*belongs)(const Number n);
+    const Relation *(*and_relations)();
+    const Relation *(*or_relations)();
 };
 
 #include "set_rules.h"

@@ -16,7 +16,7 @@ static const Set U = {
     .symbol = 'U',
     .belongs = &belongs_universe,
     .relations_length = 0,
-    .relations = &relations_universe
+    //.relations = &relations_universe
 };
 
 static const bool belongs_universe(const Number x) {
