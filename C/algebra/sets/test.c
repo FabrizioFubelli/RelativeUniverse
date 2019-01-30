@@ -27,11 +27,11 @@ int main() {
 
 
 void test_sets() {
-    #define SETS 4
+    #define SETS 5
     #define NUMBERS 8
 
     printf("SETS = %hd\n", SETS);
-    const char sets[SETS] = {'N', 'Z', 'E', 'O'};
+    const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -50,11 +50,14 @@ void test_sets() {
                 case 'Z':
                 result = Z.belongs(numbers[j]);
                 break;
+                case 'P':
+                result = P.belongs(numbers[j]);
+                break;
+                case 'D':
+                result = D.belongs(numbers[j]);
+                break;
                 case 'E':
                 result = E.belongs(numbers[j]);
-                break;
-                case 'O':
-                result = O.belongs(numbers[j]);
                 break;
                 default:
                 printf("INVALID SET SYMBOL\n\n");

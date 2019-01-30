@@ -4,7 +4,7 @@
 
 #include "../../utils/util.h"
 #include "set_interface.h"
-#include "integer.h"
+#include "universe.h"
 
 const bool belongs_real(const Number x);
 
@@ -15,7 +15,7 @@ static const Set R = {
 
 const bool belongs_real(const Number x) {
     // Check complex, imaginary ?
-    return true;
+    return U.belongs(x);
 }
 
 #endif

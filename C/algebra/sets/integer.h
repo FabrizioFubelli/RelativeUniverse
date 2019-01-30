@@ -4,7 +4,7 @@
 
 #include "../../utils/util.h"
 #include "set_interface.h"
-#include "natural.h"
+#include "real.h"
 
 const bool belongs_integer(const Number x);
 
@@ -14,7 +14,7 @@ static const Set Z = {
 };
 
 const bool belongs_integer(const Number x) {
-    return N.belongs(x) || N.belongs(-x);
+    return R.belongs(x) && (x - ((long long int) x)) == 0;
 }
 
 #endif
