@@ -25,16 +25,37 @@ int main() {
 }
 
 
-void test_sets() {
-    void test_set(Number n) {
-        printf("N.belongs(%Lf) = %d\n\n", n, N.belongs(n));
-    }
 
-    test_set(get_number(1239489));
-    test_set(get_number(242.1234));
-    test_set(get_number(-1324412));
-    test_set(get_number(-13244.213313589));
-    test_set(get_number(1234567891234.01));
+void test_sets() {
+    #define SETS 3
+    #define NUMBERS 5
+
+    printf("SETS = %hd\n", SETS);
+    const char sets[SETS] = {'N', 'Z', 'E'};
+
+    printf("NUMBERS = %hd\n", NUMBERS);
+    const Number numbers[NUMBERS] = {
+        1239489, 242.1234, -1324412, -13244.213313589, 1234567891234.01
+    };
+
+    for (short i=0; i<SETS; i++) {
+        printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
+        for (short j=0; j<NUMBERS; j++) {
+            bool result;
+            switch (sets[i]) {
+                case 'N':
+                result = N.belongs(numbers[j]);
+                break;
+                case 'Z':
+                result = Z.belongs(numbers[j]);
+                break;
+                case 'E':
+                result = E.belongs(numbers[j]);
+                break;
+            }
+            printf("%c.belongs(%Lf) = %d\n\n", sets[i], numbers[j], result);
+        }
+    }
 }
 
 

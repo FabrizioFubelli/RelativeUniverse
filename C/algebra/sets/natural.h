@@ -13,7 +13,7 @@ static const Set N = {
 };
 
 const bool belongs_natural(const Number x) {
-    return (x - ((long long int) x)) == 0;
+    return x >= (Number) 0 && (x - ((long long int) x)) == 0;
 }
 
 #endif
