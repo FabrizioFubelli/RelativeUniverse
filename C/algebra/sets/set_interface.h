@@ -15,16 +15,30 @@ struct set
 };
 
 /*
+ * @return `A ⊆ B`
+*/
+static bool is_subset(const Set A, const Set B) {
+    printf("NOT IMPLEMENTED\n");
+}
+
+/*
+ * @return `A ⊇ B`
+*/
+static bool is_superset(const Set A, const Set B) {
+    printf("NOT IMPLEMENTED\n");
+}
+
+/*
  * @return `A ⊂ B`
 */
-static bool set_includes(const Set A, const Set B) {
+static bool is_proper_subset(const Set A, const Set B) {
     printf("NOT IMPLEMENTED\n");
 }
 
 /*
  * @return `A ⊃ B`
 */
-static bool set_is_included(const Set A, const Set B) {
+static bool is_proper_superset(const Set A, const Set B) {
     printf("NOT IMPLEMENTED\n");
 }
 
@@ -54,6 +68,13 @@ static Set set_union(const Set A, const Set B) {
         .belongs = &belongs_union
     };
     return C;
+}
+
+/*
+ * @return `P(X)`: all subsets of X
+*/
+static Set set_power(const Set X) {
+    printf("NOT IMPLEMENTED");
 }
 
 /*
