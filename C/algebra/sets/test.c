@@ -39,7 +39,7 @@ void test_sets() {
 
     for (unsigned short i=0; i<SETS; i++) {
         printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
-        Set *set;
+        const Set *set;
         if (sets[i] == 'U') {
             set = &U;
         } else if (sets[i] == 'R') {

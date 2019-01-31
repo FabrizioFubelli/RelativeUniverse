@@ -22,17 +22,17 @@ struct relation
 
 struct relations
 {
-    unsigned int rules_length;
-    unsigned int *rules_index;
-    unsigned int and_length;
-    unsigned int or_length;
-    Relation* and;
-    Relation* or;
+    const unsigned int rules_length;
+    const unsigned int *rules_index;
+    const unsigned int and_length;
+    const unsigned int or_length;
+    const Relation* and;
+    const Relation* or;
 };
 
 static void print_relation(Relation relation, const unsigned int left) {
     unsigned int i, s;
-    char *space = (char *) malloc(left*sizeof(char));
+    char *space = (char *) malloc(left*sizeof(char)+1);
     for (s=0; s<left; s++) {
         space[s] = ' ';
         /*if (s >= 4 && s % 4 == 0) {
@@ -41,6 +41,7 @@ static void print_relation(Relation relation, const unsigned int left) {
             space[s] = ' ';
         }*/
     }
+    space[s] = '\0';
     printf("%s|-- A ", space);
     print_set(relation.A, left+6);
     printf("%s|-- B ", space);
@@ -50,7 +51,7 @@ static void print_relation(Relation relation, const unsigned int left) {
 
 static void print_relations(Relations relations, const unsigned int left) {
     unsigned int i, s;
-    char *space = (char *) malloc(left*sizeof(char));
+    char *space = (char *) malloc(left*sizeof(char)+1);
     for (s=0; s<left; s++) {
         space[s] = ' ';
         /*
@@ -60,6 +61,7 @@ static void print_relations(Relations relations, const unsigned int left) {
             space[s] = ' ';
         }*/
     }
+    space[s] = '\0';
     printf("%s|--Relations\n", space);
     printf("%s    |\n", space);
     printf("%s    |--rules_length: %u\n", space, relations.rules_length);

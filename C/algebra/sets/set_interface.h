@@ -25,7 +25,7 @@ static void print_set(const Set *set, const unsigned int left) {
     unsigned int s;
     char *space;
     if (left > 0) {
-        space = (char *) malloc(left*sizeof(char));
+        space = (char *) malloc(left*sizeof(char)+1);
         for (s=0; s<left; s++) {
             space[s] = ' ';
             /*
@@ -35,6 +35,7 @@ static void print_set(const Set *set, const unsigned int left) {
                 space[s] = ' ';
             }*/
         }
+        space[s] = '\0';
     } else {
         space = "";
     }
@@ -145,13 +146,18 @@ static Relations *get_relations(const Relation *or, const Relation *and,
     const unsigned int or_length, const unsigned int and_length,
     const unsigned int *rules_index, const unsigned int rules_length) {
 
+    Relations r = {
+        .rules_length = rules_length,
+        .rules_index = rules_index,
+        .and_length = and_length,
+        .or_length = or_length,
+        .and = and,
+        .or = or
+    };
+
     Relations *relations = (Relations *) malloc(sizeof(Relations));
-    relations->rules_length = rules_length;
-    relations->rules_index = rules_index;
-    relations->and_length = and_length;
-    relations->or_length = or_length;
-    relations->and = and;
-    relations->or = or;
+    memcpy((void *) relations, &r, sizeof(Relations));
+
     return relations;
 }
 
