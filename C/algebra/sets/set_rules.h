@@ -36,13 +36,13 @@ static char *rule_to_string(unsigned int index) {
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-typedef bool (*Rule)(const Set X, const Number x);
+typedef bool (*Rule)(const Number x);
 
-static bool only_integers(const Set X, const Number x);
-static bool only_natural(const Set X, const Number x);
-static bool only_even(const Set X, const Number x);
-static bool only_odd(const Set X, const Number x);
-static bool empty(const Set X, const Number x);
+static bool only_integers(const Number x);
+static bool only_natural(const Number x);
+static bool only_even(const Number x);
+static bool only_odd(const Number x);
+static bool empty(const Number x);
 
 static const Rule SET_RULES[] = {
     [ONLY_INTEGERS] = only_integers,
@@ -55,35 +55,35 @@ static const Rule SET_RULES[] = {
 /*
  * 1
 */
-static bool only_integers(const Set X, const Number x) {
+static bool only_integers(const Number x) {
     return (x - ((long long int) x)) == 0;
 }
 
 /*
  * 2
 */
-static bool only_natural(const Set X, const Number x) {
+static bool only_natural(const Number x) {
     return x >= (Number) 0;
 }
 
 /*
  * 3
 */
-static bool only_even(const Set X, const Number x) {
+static bool only_even(const Number x) {
     return remainder(x, 2) == 0;
 }
 
 /*
  * 4
 */
-static bool only_odd(const Set X, const Number x) {
+static bool only_odd(const Number x) {
     return remainder(x, 2) != 0;
 }
 
 /*
  * 5
 */
-static bool empty(const Set X, const Number x) {
+static bool empty(const Number x) {
     return false;
 }
 

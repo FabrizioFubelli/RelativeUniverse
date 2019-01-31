@@ -8,10 +8,8 @@
 #include "universe.h"
 #include "real.h"
 #include "integer.h"
-/*
-
 #include "natural.h"
-
+/*
 #include "complex.h"
 #include "imaginary.h"
 */
