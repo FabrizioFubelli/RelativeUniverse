@@ -30,11 +30,6 @@ struct relations
     Relation* or;
 };
 
-
-static char *rule_to_string(unsigned int index) {
-    return sprintf("Rule (Index: %u)\n", index);
-}
-
 static void print_relation(Relation relation, const unsigned int left) {
     unsigned int i, s;
     char *space = (char *) malloc(left*sizeof(char));
@@ -48,6 +43,8 @@ static void print_relation(Relation relation, const unsigned int left) {
     }
     printf("%s|-- A ", space);
     print_set(relation.A, left+6);
+    printf("%s|-- B ", space);
+    print_set(relation.B, left+6);
     free(space);
 }
 
@@ -55,11 +52,13 @@ static void print_relations(Relations relations, const unsigned int left) {
     unsigned int i, s;
     char *space = (char *) malloc(left*sizeof(char));
     for (s=0; s<left; s++) {
+        space[s] = ' ';
+        /*
         if (s >= 4 && s % 4 == 0) {
             space[s] = '|';
         } else {
             space[s] = ' ';
-        }
+        }*/
     }
     printf("%s|--Relations\n", space);
     printf("%s    |\n", space);
@@ -69,8 +68,11 @@ static void print_relations(Relations relations, const unsigned int left) {
         printf("%s    |--rules_index\n", space);
         for (i=0; i<relations.rules_length; i++) {
             bool last = i == relations.rules_length-1;
-            printf("%s    %c  |\n", space, last ? ' ' : '|');
-            printf("%s    %c   |-- %u. %s\n", space, last ? ' ' : '|', i+1, rule_to_string(relations.rules_index[i]));
+            printf("%s    %c      |\n", space, last ? ' ' : '|');
+            const unsigned int rule_index = relations.rules_index[i];
+            char *rule_name =  rule_to_string(rule_index);
+            printf("%s    %c      |-- %u. Rule: %s\n", space, last ? ' ' : '|', i+1, rule_name);
+            free(rule_name);
         }
     }
     printf("%s    |\n", space);

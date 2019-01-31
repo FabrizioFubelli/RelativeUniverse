@@ -3,6 +3,7 @@
 
 typedef struct set Set;
 static void print_set(const Set *set, const unsigned int left);
+static char *rule_to_string(unsigned int index);
 
 #include <stdbool.h>
 #include <stdarg.h>
@@ -169,7 +170,7 @@ static Relation *get_relations_part(const unsigned int relations_length, ...) {
     return relations;
 }
 
-static unsigned int *get_rules(int rules_length, ...) {
+static unsigned int *get_rules(unsigned int rules_length, ...) {
     va_list valist;
     unsigned int i;
 

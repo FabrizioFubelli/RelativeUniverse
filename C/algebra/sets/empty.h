@@ -1,43 +1,66 @@
 // Empty Set (Ø)
+
 #ifndef algebra_sets_empty_h
 #define algebra_sets_empty_h
 
 #include "../../utils/util.h"
 #include "set_interface.h"
 
-static const bool belongs_empty(const Number x);
-static const unsigned int *rules_empty();
-static const Relation *relations_empty();
 
-static const Set E = {
+
+
+//---- Static constants
+#define N_RULES_EMPTY 1
+#define N_RELATIONS_EMPTY_AND 0
+#define N_RELATIONS_EMPTY_OR 0
+
+
+
+//---- Function declarations
+const bool belongs_empty(const Number x);
+const Relations *get_relations_empty();
+
+
+
+//---- Static variables
+static Relations *relations_empty = NULL;
+
+
+
+//---- Main struct
+const static Set E = {
     .symbol = 'E',
-    //.relations_length = 1,
     .belongs = &belongs_empty,
-    //.relations = &relations_empty
+    .relations = &get_relations_empty,
 };
 
-static const bool belongs_empty(const Number x) {
+
+
+//---- Function implementations
+
+const bool belongs_empty(const Number x) {
     return belongs_to_set(x, E);
 }
 
-static const Relation *relations_empty() {
-    /*const Relation r = {
-        .A = NULL,
-        .B = NULL,
-        .type = AND,
-        .rules_length = 1,
-        .rules_index = &rules_empty
-    };
-    const Relation relations[] = { r };
-    return relations;*/
-}
+const Relations *get_relations_empty() {
+    if (relations_empty != NULL) {
+        return relations_empty;
+    }
 
-static const unsigned int *rules_empty() {
-    /*const unsigned int rule_numbers[] = { EMPTY };
-    return rule_numbers;*/
-    /*
-    void *p = malloc(sizeof(Rule) * 1);
-    return (Rule *) memcpy(p, EMPTY, sizeof(EMPTY));*/
+    //-- OR relations
+    Relation *or_relations = get_relations_part(N_RELATIONS_EMPTY_OR);
+
+    // AND relations
+    Relation *and_relations = get_relations_part(N_RELATIONS_EMPTY_AND);
+
+    // Rules
+    unsigned int *rules = get_rules(N_RULES_EMPTY, EMPTY);
+
+    // All Relations
+    relations_empty = get_relations(or_relations, and_relations,
+        N_RELATIONS_EMPTY_OR, N_RELATIONS_EMPTY_AND, rules, N_RULES_EMPTY);
+
+    return relations_empty;
 }
 
 #endif
