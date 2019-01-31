@@ -23,15 +23,20 @@ struct set
 
 static void print_set(const Set *set, const unsigned int left) {
     unsigned int s;
-    char *space = (char *) malloc(left*sizeof(char));
-    for (s=0; s<left; s++) {
-        space[s] = ' ';
-        /*
-        if (s >= 4 && s % 4 == 0) {
-            space[s] = '|';
-        } else {
+    char *space;
+    if (left > 0) {
+        space = (char *) malloc(left*sizeof(char));
+        for (s=0; s<left; s++) {
             space[s] = ' ';
-        }*/
+            /*
+            if (s >= 4 && s % 4 == 0) {
+                space[s] = '|';
+            } else {
+                space[s] = ' ';
+            }*/
+        }
+    } else {
+        space = "";
     }
     if (set == NULL) {
         printf("%sSet NULL\n", space);
@@ -41,7 +46,9 @@ static void print_set(const Set *set, const unsigned int left) {
     printf("    %s|\n", space);
     const Relations *relations = set->relations();
     print_relations(*relations, left+4);
-    free(space);
+    if (left > 0) {
+        free(space);
+    }
 }
 
 /*

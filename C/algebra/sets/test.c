@@ -25,12 +25,12 @@ int main() {
 }
 
 void test_sets() {
-    #define SETS 1
+    #define SETS 3
     #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
     //const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
-    const char sets[SETS] = {'R'};
+    const char sets[SETS] = {'U', 'R', 'E'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -40,10 +40,10 @@ void test_sets() {
     for (unsigned short i=0; i<SETS; i++) {
         printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
         Set *set;
-        if (sets[i] == 'R') {
-            set = &R;
-        } else if (sets[i] == 'U') {
+        if (sets[i] == 'U') {
             set = &U;
+        } else if (sets[i] == 'R') {
+            set = &R;
         } else if (sets[i] == 'E') {
             set = &E;
         } else {
