@@ -15,17 +15,17 @@ static const Relation *relations_universe();
 static const Set U = {
     .symbol = 'U',
     .belongs = &belongs_universe,
-    .relations_length = 0,
+    //.relations_length = 0,
     //.relations = &relations_universe
 };
 
 static const bool belongs_universe(const Number x) {
-    return belongs_to_set(x, U);
+    //return belongs_to_set(x, U);
 }
 
 static const Relation *relations_universe() {
-    const Relation relations[0];
-    return relations;
+    /*const Relation relations[0];
+    return relations;*/
 }
 
 static const unsigned int *rules_universe() {

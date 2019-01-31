@@ -2,6 +2,7 @@
 #define algebra_sets_set_interface_h
 
 typedef struct set Set;
+static void print_set(const Set *set, const unsigned int left);
 
 #include <stdbool.h>
 #include <stdarg.h>
@@ -13,15 +14,33 @@ typedef struct set Set;
 struct set
 {
     const char symbol;
-    const unsigned int relations_length;
     const bool (*belongs)(const Number n);
-    const Relation *(*and_relations)();
-    const Relation *(*or_relations)();
+    const Relations *(*relations)();
 };
 
 #include "set_rules.h"
 
-static void array_contains() {
+static void print_set(const Set *set, const unsigned int left) {
+    unsigned int s;
+    char *space = (char *) malloc(left*sizeof(char));
+    for (s=0; s<left; s++) {
+        space[s] = ' ';
+        /*
+        if (s >= 4 && s % 4 == 0) {
+            space[s] = '|';
+        } else {
+            space[s] = ' ';
+        }*/
+    }
+    if (set == NULL) {
+        printf("%sSet NULL\n", space);
+        return;
+    }
+    printf("Set (symbol: %c)\n", set->symbol);
+    printf("    %s|\n", space);
+    const Relations *relations = set->relations();
+    print_relations(*relations, left+4);
+    free(space);
 }
 
 /*
@@ -114,18 +133,33 @@ static bool belongs_to_set(const Number x, const Set X) {
     return true;*/
 }
 
+static Relations *get_relations(const Relation *or, const Relation *and,
+    const unsigned int or_length, const unsigned int and_length,
+    const unsigned int *rules_index, const unsigned int rules_length) {
 
-static Relation *get_relations(int num, ...) {
+    Relations *relations = (Relations *) malloc(sizeof(Relations));
+    relations->rules_length = rules_length;
+    relations->rules_index = rules_index;
+    relations->and_length = and_length;
+    relations->or_length = or_length;
+    relations->and = and;
+    relations->or = or;
+    return relations;
+}
+
+
+static Relation *get_relations_part(const unsigned int relations_length, ...) {
+
     va_list valist;
     unsigned int i;
 
-    Relation *relations = (Relation *) malloc(sizeof(Relation)*num);
+    Relation *relations = (Relation *) malloc(sizeof(Relation)*relations_length);
 
-    /* initialize valist for num number of arguments */
-    va_start(valist, num);
+    /* initialize valist for relations_length number of arguments */
+    va_start(valist, relations_length);
 
     /* access all the arguments assigned to valist */
-    for (i = 0; i < num; i++) {
+    for (i = 0; i < relations_length; i++) {
         Relation r = va_arg(valist, Relation);
         memcpy(relations+i, &r, sizeof(r));
     }
@@ -135,17 +169,17 @@ static Relation *get_relations(int num, ...) {
     return relations;
 }
 
-static unsigned int *get_rules(int num, ...) {
+static unsigned int *get_rules(int rules_length, ...) {
     va_list valist;
     unsigned int i;
 
-    unsigned int *rules = (unsigned int *) malloc(sizeof(unsigned int)*num);
+    unsigned int *rules = (unsigned int *) malloc(sizeof(unsigned int)*rules_length);
 
-    /* initialize valist for num number of arguments */
-    va_start(valist, num);
+    /* initialize valist for rules_length number of arguments */
+    va_start(valist, rules_length);
 
     /* access all the arguments assigned to valist */
-    for (i = 0; i < num; i++) {
+    for (i = 0; i < rules_length; i++) {
         unsigned int r = va_arg(valist, unsigned int);
         memcpy(rules+i, &r, sizeof(r));
     }

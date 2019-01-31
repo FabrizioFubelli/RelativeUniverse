@@ -39,47 +39,22 @@ void test_sets() {
 
     for (unsigned short i=0; i<SETS; i++) {
         printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
-
-        Set *set_pointer;
+        Set *set;
         if (sets[i] == 'R') {
-            set_pointer = &R;
+            set = &R;
         } else if (sets[i] == 'U') {
-            set_pointer = &U;
+            set = &U;
         } else if (sets[i] == 'E') {
-            set_pointer = &E;
+            set = &E;
         } else {
             printf("SET %c NOT VALID!\n", sets[i]);
             continue;
         }
-        ;
-        const Set set = *set_pointer;
-        const Relation *set_and_relations = set.and_relations();
-        printf("Relations length %u\n", set.relations_length);
-        for (unsigned int j=0; j<set.relations_length; j++) {
-            printf("Relation %u\n", j);
-            const Relation set_relation = set_and_relations[j];
-            printf("    |--Type: %s\n", set_relation.type == OR ? "OR" : "AND");
-            printf("    |--A (assigned): %s\n", set_relation.A != NULL ? "Yes" : "No");
-            printf("    |--B (assigned): %s\n", set_relation.B != NULL ? "Yes" : "No");
-            printf("    |--N. Rules: %u\n", set_relation.rules_length);
-            if (set_relation.rules_length > 0) {
-                printf("    |--Rules\n");
-                const unsigned int rules = set_relation.get_rule_indexes();
-            }
-            printf("\n");
-            /*if (r.rules_tot > 0) {
-                unsigned int *set_rules = r.get_rule_numbers();
-                printf("    |--Rules:\n");
-                for (unsigned int m=0; m<r.rules_tot; m++) {
-                    printf("         |--Number: %u\n", set_rules[m]);
-                }
-            }*/
-
-            //print_relation(r);
-        }
+        print_set(set, 0);
+        printf("\n\n");
         for (unsigned short k=0; k<NUMBERS; k++) {
             Number n = numbers[k];
-            printf("%c.belongs(%Lf) = %d\n\n", sets[i], n, set.belongs(n));
+            printf("%c.belongs(%Lf) = %d\n\n", sets[i], n, set->belongs(n));
         }
     }
 }

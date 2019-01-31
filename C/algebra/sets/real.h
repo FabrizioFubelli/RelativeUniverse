@@ -9,31 +9,29 @@
 
 
 
-//---- Static variables ----//
-const static unsigned int N_RELATIONS_REAL = 1;
-static Relation *and_relations_real = NULL;
-static Relation *or_relations_real = NULL;
-unsigned int *rules_real = NULL;
+//---- Static constants
+#define N_RULES_REAL 0
+#define N_RELATIONS_REAL_AND 0
+#define N_RELATIONS_REAL_OR 1
 
 
 
 //---- Function declarations
-
 const bool belongs_real(const Number x);
-const unsigned int *get_rules_real();
-const Relation *get_and_relations_real();
-const Relation *get_or_relations_real();
+const Relations *get_relations_real();
+
+
+
+//---- Static variables
+static Relations *relations_real = NULL;
 
 
 
 //---- Main struct
-
-static Set R = {
+const static Set R = {
     .symbol = 'R',
-    .relations_length = N_RELATIONS_REAL,
     .belongs = &belongs_real,
-    .and_relations = &get_and_relations_real,
-    .or_relations = &get_or_relations_real
+    .relations = &get_relations_real,
 };
 
 
@@ -44,43 +42,30 @@ const bool belongs_real(const Number x) {
     return belongs_to_set(x, R);
 }
 
-const unsigned int *get_rules_real() {
-    if (rules_real != NULL) {
-        return rules_real;
+const Relations *get_relations_real() {
+    if (relations_real != NULL) {
+        return relations_real;
     }
-    const static unsigned int N_RULES = 0;
-    rules_real = get_rules(N_RULES);
-    return rules_real;
-}
 
-const Relation *get_and_relations_real() {
-    if (and_relations_real != NULL) {
-        return and_relations_real;
-    }
-    const Relation r1 = {
+    //-- OR relations
+    const Relation or_1 = {
         .A = &U,
         .B = &E,
-        .type = OR,
-        .rules_length = 0,
-        .get_rule_indexes = &get_rules_real
+        .type = OR
     };
-    and_relations_real = get_relations(N_RELATIONS_REAL, &r1);
-    return and_relations_real;
-}
+    Relation *or_relations = get_relations_part(N_RELATIONS_REAL_OR, or_1);
 
-const Relation *get_or_relations_real() {
-    if (or_relations_real != NULL) {
-        return or_relations_real;
-    }
-    const Relation r1 = {
-        .A = &U,
-        .B = &E,
-        .type = OR,
-        .rules_length = 0,
-        .get_rule_indexes = &get_rules_real
-    };
-    or_relations_real = get_relations(N_RELATIONS_REAL, &r1);
-    return or_relations_real;
+    // AND relations
+    Relation *and_relations = get_relations_part(N_RELATIONS_REAL_AND);
+
+    // Rules
+    unsigned int *rules = get_rules(N_RULES_REAL);
+
+    // All Relations
+    relations_real = get_relations(or_relations, and_relations,
+        N_RELATIONS_REAL_OR, N_RELATIONS_REAL_AND, rules, N_RULES_REAL);
+
+    return relations_real;
 }
 
 #endif
