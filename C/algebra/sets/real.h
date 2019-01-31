@@ -11,8 +11,8 @@
 
 //---- Static constants
 #define N_RULES_REAL 0
-#define N_RELATIONS_REAL_AND 0
-#define N_RELATIONS_REAL_OR 1
+#define N_RELATIONS_REAL_AND 1
+#define N_RELATIONS_REAL_OR 0
 
 
 
@@ -48,15 +48,15 @@ const Relations *get_relations_real() {
     }
 
     //-- OR relations
-    const Relation or_1 = {
+    Relation *or_relations = get_relations_part(N_RELATIONS_REAL_OR);
+
+    // AND relations
+    const Relation and_1 = {
         .A = &U,
         .B = &E,
         .type = OR
     };
-    Relation *or_relations = get_relations_part(N_RELATIONS_REAL_OR, or_1);
-
-    // AND relations
-    Relation *and_relations = get_relations_part(N_RELATIONS_REAL_AND);
+    Relation *and_relations = get_relations_part(N_RELATIONS_REAL_AND, and_1);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_REAL);

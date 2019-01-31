@@ -25,12 +25,12 @@ int main() {
 }
 
 void test_sets() {
-    #define SETS 3
+    #define SETS 4
     #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
     //const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
-    const char sets[SETS] = {'U', 'R', 'E'};
+    const char sets[SETS] = {'U', 'R', 'Z', 'E'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -44,6 +44,8 @@ void test_sets() {
             set = &U;
         } else if (sets[i] == 'R') {
             set = &R;
+        } else if (sets[i] == 'Z') {
+            set = &Z;
         } else if (sets[i] == 'E') {
             set = &E;
         } else {

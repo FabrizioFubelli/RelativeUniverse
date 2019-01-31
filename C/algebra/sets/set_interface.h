@@ -28,19 +28,13 @@ static void print_set(const Set *set, const unsigned int left) {
         space = (char *) malloc(left*sizeof(char)+1);
         for (s=0; s<left; s++) {
             space[s] = ' ';
-            /*
-            if (s >= 4 && s % 4 == 0) {
-                space[s] = '|';
-            } else {
-                space[s] = ' ';
-            }*/
         }
         space[s] = '\0';
     } else {
         space = "";
     }
     if (set == NULL) {
-        printf("%sSet NULL\n", space);
+        printf("Set NULL\n", space);
         return;
     }
     printf("Set (symbol: %c)\n", set->symbol);
@@ -142,7 +136,7 @@ static bool belongs_to_set(const Number x, const Set X) {
     return true;*/
 }
 
-static Relations *get_relations(const Relation *or, const Relation *and,
+static Relations *get_relations(const Relation *or_r, const Relation *and_r,
     const unsigned int or_length, const unsigned int and_length,
     const unsigned int *rules_index, const unsigned int rules_length) {
 
@@ -151,8 +145,8 @@ static Relations *get_relations(const Relation *or, const Relation *and,
         .rules_index = rules_index,
         .and_length = and_length,
         .or_length = or_length,
-        .and = and,
-        .or = or
+        .and = and_r,
+        .or = or_r
     };
 
     Relations *relations = (Relations *) malloc(sizeof(Relations));
