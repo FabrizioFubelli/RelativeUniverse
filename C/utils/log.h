@@ -53,8 +53,8 @@ static void log_err(char *msg) {
 }
 
 static void __write_log__(char *msg, LogType type) {
-    const int malloc_size = sizeof(char)*(32+strlen(msg));
-    char *text = malloc(malloc_size);
+    int malloc_size = sizeof(char)*(32+strlen(msg));
+    char text[malloc_size];
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     char *color = type == INFO ? C_CYN : (type == OK ? C_GRN : C_RED);
@@ -67,7 +67,6 @@ static void __write_log__(char *msg, LogType type) {
     } else {
         f_append(LOG_FILE, text);
     }
-    free(text);
 }
 
 #endif

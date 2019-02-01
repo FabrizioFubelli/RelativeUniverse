@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "utils/util.h"
 #include "utils/log.h"
 #include "utils/number.h"
 
@@ -15,6 +16,7 @@
 void test_numbers();
 void test_sets();
 void test_files();
+void test_utils();
 
 int main() {
     /*
@@ -27,7 +29,15 @@ int main() {
 
      //test_numbers();
      //test_sets();
-     test_files();
+     //test_files();
+     test_utils();
+     return 0;
+}
+
+void test_utils() {
+    char *curr_dir = pwd();
+    printf("pwd() = %s\n", pwd());
+    free(curr_dir);
 }
 
 void test_files() {
