@@ -10,7 +10,7 @@ typedef enum relation_type {
     AND=1, OR=2
 } RelationType;
 
-#include "../../utils/util.h"
+#include "../../utils/number.h"
 #include "set_interface.h"
 
 struct relation

@@ -3,7 +3,7 @@
 #ifndef algebra_sets_real_h
 #define algebra_sets_real_h
 
-#include "../../utils/util.h"
+#include "../../utils/number.h"
 #include "set_interface.h"
 #include "universe.h"
 

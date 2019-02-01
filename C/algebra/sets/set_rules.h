@@ -33,7 +33,7 @@ static char *rule_to_string(unsigned int index) {
     return s_index;
 }
 
-#include "../../utils/util.h"
+#include "../../utils/number.h"
 #include "set_interface.h"
 
 typedef bool (*Rule)(const Number x);

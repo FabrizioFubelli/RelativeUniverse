@@ -2,7 +2,7 @@
 #ifndef algebra_sets_examples_h
 #define algebra_sets_examples_h
 
-#include "../../utils/util.h"
+#include "../../utils/number.h"
 #include "natural.h"
 
 const bool belongs_even(Number x);

@@ -8,7 +8,7 @@ static char *rule_to_string(unsigned int index);
 #include <stdbool.h>
 #include <stdarg.h>
 
-#include "../../utils/util.h"
+#include "../../utils/number.h"
 #include "set_relations.h"
 
 /* Set of Objects */
