@@ -28,9 +28,9 @@ int main() {
      */
 
      //test_numbers();
-     //test_sets();
+     test_sets();
      //test_files();
-     test_utils();
+     //test_utils();
      return 0;
 }
 
