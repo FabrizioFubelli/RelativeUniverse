@@ -29,6 +29,7 @@ static void f_append(char *file_path, char *text) {
 
 static int f_size(char *file_path) {
     FILE *fptr = fopen(file_path, "r");
+    if (fptr == NULL) { return 0; }
     int prev=ftell(fptr);
     fseek(fptr, 0L, SEEK_END);
     int sz = ftell(fptr);

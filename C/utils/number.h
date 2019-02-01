@@ -84,5 +84,4 @@ long long int: get_long_long_int(x),    unsigned long long int: get_unsigned_lon
          float: get_float(x),                             double: get_double(x),                  \
   long double: get_long_double(x),                     default: 0)
 
-
 #endif

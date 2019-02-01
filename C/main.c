@@ -32,6 +32,8 @@ int main() {
 
 void test_files() {
     Log.info("Hello files!");
+    Log.error("This is an error");
+    Log.done("All done!");
 }
 
 void test_sets() {
