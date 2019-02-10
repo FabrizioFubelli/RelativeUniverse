@@ -50,7 +50,25 @@ static void print_set(const Set *set, const unsigned int left) {
  * @return `A ⊆ B`
 */
 static bool is_subset(const Set A, const Set B) {
-    printf("NOT IMPLEMENTED\n");
+    if (A.symbol == 'E') { return true; }
+    if (B.symbol == 'E') { return false; }
+    if (A.symbol == B.symbol) { return true; }
+    unsigned int i;
+    const Relations *relations = A.relations();
+    for (i=0; i<relations->and_length; i++) {
+        const Relation and = relations->and[i];
+        if (and.type == OR) {
+            if ((and.A->symbol != 'E' && is_subset(*and.A, B)) ||
+                (and.B->symbol != 'E' && is_subset(*and.B, B))) {
+                return true;
+            }
+        } else {
+            if (is_subset(*and.A, B) && is_subset(*and.B, B)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /*
@@ -78,23 +96,11 @@ static bool is_proper_superset(const Set A, const Set B) {
  * @return `A ∩ B`
 */
 static Set set_intersection(const Set A, const Set B) {
-    /*unsigned int rules_tot = = A.rules_tot;
-    unsigned int *p = malloc(sizeof(unsigned int) * rules_tot);
-    unsigned int rules[] = (int *) memcpy(p, A.rules, sizeof(unsigned int) * rules_tot);
-
-    for (unsigned short i=0; i<B.rules_tot; i++) {
-
-        for (unsigned short j=0; j<rules_tot; j++) {
-            if (B.rules[i] == rules[j]) {
-                break;
-            }
-        }
-    }*/
     const bool belongs_intersection(Number x) {
         return A.belongs(x) && B.belongs(x);
     }
     const Set C = {
-        .symbol = 'C',
+        .symbol = '-',
         .belongs = &belongs_intersection
     };
     return C;
@@ -108,7 +114,7 @@ static Set set_union(const Set A, const Set B) {
         return A.belongs(x) || B.belongs(x);
     }
     const Set C = {
-        .symbol = 'C',
+        .symbol = '+',
         .belongs = &belongs_union
     };
     return C;
@@ -134,9 +140,6 @@ static bool belongs_to_set(const Number x, const Set X) {
             break;
         }
     }
-    if (!result && relations->or_length == 0) {
-        return false;
-    }
     for (i=0; i<relations->and_length; i++) {
         const Relation and = relations->and[i];
         if (and.type == AND) {
@@ -154,15 +157,6 @@ static bool belongs_to_set(const Number x, const Set X) {
         }
     }
     return result;
-    /*if (X.parent != NULL && !X.parent->belongs(x)) {
-        return false;
-    }
-    for (unsigned int i=0; i<X.rules_tot; i++) {
-        if (!SET_RULES[X.rules[i]](X, x)) {
-            return false;
-        }
-    }
-    return true;*/
 }
 
 static Relations *get_relations(const Relation *or_r, const Relation *and_r,

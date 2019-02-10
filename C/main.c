@@ -49,7 +49,7 @@ void test_sets() {
     #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
-    const char sets[SETS] = {'U', 'R', 'Z', 'N', 'P', 'D', 'E'};
+    const Set *sets[SETS] = {&U, &R, &Z, &N, &P, &D, &E};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -57,32 +57,21 @@ void test_sets() {
     };
 
     for (unsigned short i=0; i<SETS; i++) {
-        printf("\n\nTESTING \"%c\" SET\n\n", sets[i]);
-        const Set *set;
-        if (sets[i] == 'U') {
-            set = &U;
-        } else if (sets[i] == 'R') {
-            set = &R;
-        } else if (sets[i] == 'Z') {
-            set = &Z;
-        } else if (sets[i] == 'N') {
-            set = &N;
-        } else if (sets[i] == 'E') {
-            set = &E;
-        } else if (sets[i] == 'P') {
-            set = &P;
-        } else if (sets[i] == 'D') {
-            set = &D;
-        } else {
-            printf("SET %c NOT VALID!\n", sets[i]);
-            continue;
-        }
+        const Set *set = sets[i];
+        printf("\n\nTESTING \"%c\" SET\n\n", set->symbol);
         print_set(set, 0);
         printf("\n\n");
         for (unsigned short k=0; k<NUMBERS; k++) {
             Number n = numbers[k];
-            printf("%c.belongs(%Lf) = %d\n\n", sets[i], n, set->belongs(n));
+            printf("%c.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(n));
         }
+        printf("\n");
+        for (unsigned short i=0; i<SETS; i++) {
+            const Set *set2 = sets[i];
+            printf("%c ⊆ %c = %d\n\n", set->symbol, set2->symbol, is_subset(*set, *set2));
+        }
+
+        printf("\n\n");
     }
 }
 
