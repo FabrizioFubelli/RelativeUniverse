@@ -11,8 +11,6 @@
 
 #include "algebra/sets/sets.h"
 
-//#include "examples.h"
-
 void test_numbers();
 void test_sets();
 void test_files();
@@ -23,8 +21,8 @@ int main() {
      * N = Natural numbers
      * Z = Integers
      * R = Real numbers
-     * E = Even numbers
-     * O = Odd numbers
+     * P = Even numbers
+     * D = Odd numbers
      */
 
      //test_numbers();
@@ -47,12 +45,11 @@ void test_files() {
 }
 
 void test_sets() {
-    #define SETS 5
+    #define SETS 7
     #define NUMBERS 5
 
     printf("SETS = %hd\n", SETS);
-    //const char sets[SETS] = {'N', 'Z', 'P', 'D', 'E', 'R'};
-    const char sets[SETS] = {'U', 'R', 'Z', 'N', 'E'};
+    const char sets[SETS] = {'U', 'R', 'Z', 'N', 'P', 'D', 'E'};
 
     printf("NUMBERS = %hd\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -72,6 +69,10 @@ void test_sets() {
             set = &N;
         } else if (sets[i] == 'E') {
             set = &E;
+        } else if (sets[i] == 'P') {
+            set = &P;
+        } else if (sets[i] == 'D') {
+            set = &D;
         } else {
             printf("SET %c NOT VALID!\n", sets[i]);
             continue;

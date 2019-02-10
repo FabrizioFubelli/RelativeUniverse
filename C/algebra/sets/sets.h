@@ -9,6 +9,9 @@
 #include "real.h"
 #include "integer.h"
 #include "natural.h"
+#include "even.h"
+#include "odd.h"
+
 /*
 #include "complex.h"
 #include "imaginary.h"

@@ -122,9 +122,38 @@ static Set set_power(const Set X) {
 }
 
 /*
- * @return `x ∊ A`
+ * @return `x ∊ X`
 */
 static bool belongs_to_set(const Number x, const Set X) {
+    unsigned int i;
+    const Relations *relations = X.relations();
+    bool result = true;
+    for (i=0; i<relations->rules_length; i++) {
+        if (!SET_RULES[relations->rules_index[i]](x)) {
+            result = false;
+            break;
+        }
+    }
+    if (!result && relations->or_length == 0) {
+        return false;
+    }
+    for (i=0; i<relations->and_length; i++) {
+        const Relation and = relations->and[i];
+        if (and.type == AND) {
+            result = result && (and.A->belongs(x) && and.B->belongs(x));
+        } else {
+            result = result && (and.A->belongs(x) || and.B->belongs(x));
+        }
+    }
+    for (i=0; i<relations->or_length; i++) {
+        const Relation or = relations->or[i];
+        if (or.type == AND) {
+            result = result || (or.A->belongs(x) && or.B->belongs(x));
+        } else {
+            result = result || (or.A->belongs(x) || or.B->belongs(x));
+        }
+    }
+    return result;
     /*if (X.parent != NULL && !X.parent->belongs(x)) {
         return false;
     }

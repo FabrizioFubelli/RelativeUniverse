@@ -74,7 +74,7 @@ static void print_relations(Relations relations, const unsigned int left) {
         printf("%s    |--and (list)\n", space);
         for (i=0; i<relations.and_length; i++) {
             bool last = i == relations.and_length-1;
-            Relation and = relations.and[i];
+            const Relation and = relations.and[i];
             printf("%s    %c  |\n", space, last ? ' ' : '|');
             printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, and.type == OR ? "OR" : (and.type == AND ? "AND" : "UNKNOWN"));
             printf("%s    %c            |\n", space, last ? ' ' : '|');
