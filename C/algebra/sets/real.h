@@ -29,7 +29,7 @@ static Relations *relations_real = NULL;
 
 //---- Main struct
 const static Set R = {
-    .symbol = 'R',
+    .symbol = "R",
     .belongs = &belongs_real,
     .relations = &get_relations_real,
 };
@@ -39,7 +39,7 @@ const static Set R = {
 //---- Function implementations
 
 const bool belongs_real(const Number x) {
-    return belongs_to_set(x, R);
+    return belongs_to_set(x, &R);
 }
 
 const Relations *get_relations_real() {

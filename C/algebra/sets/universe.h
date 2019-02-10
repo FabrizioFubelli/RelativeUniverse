@@ -29,7 +29,7 @@ static Relations *relations_universe = NULL;
 
 //---- Main struct
 const static Set U = {
-    .symbol = 'U',
+    .symbol = "U",
     .belongs = &belongs_universe,
     .relations = &get_relations_universe,
 };
@@ -39,7 +39,7 @@ const static Set U = {
 //---- Function implementations
 
 const bool belongs_universe(const Number x) {
-    return belongs_to_set(x, U);
+    return belongs_to_set(x, &U);
 }
 
 const Relations *get_relations_universe() {

@@ -27,7 +27,7 @@ static Relations *relations_even = NULL;
 
 //---- Main struct
 const static Set P = {
-    .symbol = 'P',
+    .symbol = "P",
     .belongs = &belongs_even,
     .relations = &get_relations_even,
 };
@@ -37,7 +37,7 @@ const static Set P = {
 //---- Function implementations
 
 const bool belongs_even(const Number x) {
-    return belongs_to_set(x, P);
+    return belongs_to_set(x, &P);
 }
 
 const Relations *get_relations_even() {

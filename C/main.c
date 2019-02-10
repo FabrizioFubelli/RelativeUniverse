@@ -39,6 +39,7 @@ void test_utils() {
 }
 
 void test_files() {
+    printf("Log file: %s\n", LOG_FILE);
     Log.info("Hello files!");
     Log.error("This is an error");
     Log.done("All done!");
@@ -48,27 +49,38 @@ void test_sets() {
     #define SETS 7
     #define NUMBERS 5
 
-    printf("SETS = %hd\n", SETS);
+    printf("SETS = %hu\n", SETS);
     const Set *sets[SETS] = {&U, &R, &Z, &N, &P, &D, &E};
 
-    printf("NUMBERS = %hd\n", NUMBERS);
+    printf("NUMBERS = %hu\n", NUMBERS);
     const Number numbers[NUMBERS] = {
         1234, 123.9087, -190, -43.322, 2148089043243
     };
 
-    for (unsigned short i=0; i<SETS; i++) {
-        const Set *set = sets[i];
-        printf("\n\nTESTING \"%c\" SET\n\n", set->symbol);
-        print_set(set, 0);
-        printf("\n\n");
+    void check_numbers(const Set *set) {
         for (unsigned short k=0; k<NUMBERS; k++) {
             Number n = numbers[k];
-            printf("%c.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(n));
+            printf("%s.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(n));
         }
+    }
+
+    for (unsigned short i=0; i<SETS; i++) {
+        const Set *set = sets[i];
+        printf("\n\nTESTING \"%s\" SET\n\n", set->symbol);
+        print_set(set, 0);
+        printf("\n\n");
+        check_numbers(set);
         printf("\n");
         for (unsigned short i=0; i<SETS; i++) {
             const Set *set2 = sets[i];
-            printf("%c ⊆ %c = %d\n\n", set->symbol, set2->symbol, is_subset(*set, *set2));
+            printf("%s ⊆ %s = %d\n", set->symbol, set2->symbol, is_subset(*set, *set2));
+            printf("%s ⊂ %s = %d\n", set->symbol, set2->symbol, is_proper_subset(*set, *set2));
+            if (strcmp(set2->symbol, set->symbol) != 0) {
+                const Set *sets_union = set_union(set, set2);
+                print_set(sets_union, 0);
+                //check_numbers(sets_union);
+            }
+            printf("\n");
         }
 
         printf("\n\n");

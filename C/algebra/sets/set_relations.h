@@ -6,9 +6,15 @@
 typedef unsigned int (*rules_fun)();
 typedef struct relation Relation;
 typedef struct relations Relations;
+typedef struct relation_map RelationMap;
 typedef enum relation_type {
     AND=1, OR=2
 } RelationType;
+
+struct relation_map {
+    const char *key;
+    const Relations *value;
+};
 
 #include "../../utils/number.h"
 #include "set_interface.h"
@@ -30,21 +36,23 @@ struct relations
     const Relation* or;
 };
 
-static void print_relation(Relation relation, const unsigned int left) {
+static void print_relation(const Relation *relation, const unsigned int left) {
     unsigned int i, s;
     char *space = (char *) malloc(left*sizeof(char)+1);
     for (s=0; s<left; s++) {
         space[s] = ' ';
     }
     space[s] = '\0';
+
     printf("%s|-- A ", space);
-    print_set(relation.A, left+6);
+    print_set(relation->A, left+6);
     printf("%s|-- B ", space);
-    print_set(relation.B, left+6);
+
+    print_set(relation->B, left+6);
     free(space);
 }
 
-static void print_relations(Relations relations, const unsigned int left) {
+static void print_relations(const Relations *relations, const unsigned int left) {
     unsigned int i, s;
     char *space = (char *) malloc(left*sizeof(char)+1);
     for (s=0; s<left; s++) {
@@ -53,14 +61,14 @@ static void print_relations(Relations relations, const unsigned int left) {
     space[s] = '\0';
     printf("%s|--Relations\n", space);
     printf("%s    |\n", space);
-    printf("%s    |--rules_length: %u\n", space, relations.rules_length);
-    if (relations.rules_length > 0) {
+    printf("%s    |--rules_length: %u\n", space, relations->rules_length);
+    if (relations->rules_length > 0) {
         printf("%s    |\n", space);
         printf("%s    |--rules_index\n", space);
-        for (i=0; i<relations.rules_length; i++) {
-            bool last = i == relations.rules_length-1;
+        for (i=0; i<relations->rules_length; i++) {
+            bool last = i == relations->rules_length-1;
             printf("%s    %c      |\n", space, last ? ' ' : '|');
-            const unsigned int rule_index = relations.rules_index[i];
+            const unsigned int rule_index = relations->rules_index[i];
             char *rule_name =  rule_to_string(rule_index);
             printf("%s    %c      |-- %u. Rule: %s\n", space, last ? ' ' : '|', i+1, rule_name);
             free(rule_name);
@@ -68,31 +76,31 @@ static void print_relations(Relations relations, const unsigned int left) {
     }
     printf("%s    |\n", space);
 
-    printf("%s    |--and_length: %u\n", space, relations.and_length);
-    if (relations.and_length > 0) {
+    printf("%s    |--and_length: %u\n", space, relations->and_length);
+    if (relations->and_length > 0) {
         printf("%s    |\n", space);
         printf("%s    |--and (list)\n", space);
-        for (i=0; i<relations.and_length; i++) {
-            bool last = i == relations.and_length-1;
-            const Relation and = relations.and[i];
+        for (i=0; i<relations->and_length; i++) {
+            bool last = i == relations->and_length-1;
+            const Relation and = relations->and[i];
             printf("%s    %c  |\n", space, last ? ' ' : '|');
             printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, and.type == OR ? "OR" : (and.type == AND ? "AND" : "UNKNOWN"));
             printf("%s    %c            |\n", space, last ? ' ' : '|');
-            print_relation(and, left+17);
+            print_relation(&and, left+17);
         }
     }
     printf("%s    |\n", space);
-    printf("%s    |--or_length: %u\n", space, relations.or_length);
-    if (relations.or_length > 0) {
+    printf("%s    |--or_length: %u\n", space, relations->or_length);
+    if (relations->or_length > 0) {
         printf("%s    |\n", space);
         printf("%s    |--or (list)\n", space);
-        for (i=0; i<relations.or_length; i++) {
-            bool last = i == relations.or_length-1;
-            Relation or = relations.or[i];
+        for (i=0; i<relations->or_length; i++) {
+            bool last = i == relations->or_length-1;
+            Relation or = relations->or[i];
             printf("%s    %c  |\n", space, last ? ' ' : '|');
             printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, or.type == OR ? "OR" : (or.type == AND ? "AND" : "UNKNOWN"));
             printf("%s    %c            |\n", space, last ? ' ' : '|');
-            print_relation(or, left+17);
+            print_relation(&or, left+17);
         }
     }
     printf("\n");

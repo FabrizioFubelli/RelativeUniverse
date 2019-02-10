@@ -28,7 +28,7 @@ static Relations *relations_natural = NULL;
 
 //---- Main struct
 const static Set N = {
-    .symbol = 'N',
+    .symbol = "N",
     .belongs = &belongs_natural,
     .relations = &get_relations_natural,
 };
@@ -38,7 +38,7 @@ const static Set N = {
 //---- Function implementations
 
 const bool belongs_natural(const Number x) {
-    return belongs_to_set(x, N);
+    return belongs_to_set(x, &N);
 }
 
 const Relations *get_relations_natural() {

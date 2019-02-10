@@ -29,7 +29,7 @@ static Relations *relations_integer = NULL;
 
 //---- Main struct
 const static Set Z = {
-    .symbol = 'Z',
+    .symbol = "Z",
     .belongs = &belongs_integer,
     .relations = &get_relations_integer,
 };
@@ -39,7 +39,7 @@ const static Set Z = {
 //---- Function implementations
 
 const bool belongs_integer(const Number x) {
-    return belongs_to_set(x, Z);
+    return belongs_to_set(x, &Z);
 }
 
 const Relations *get_relations_integer() {
