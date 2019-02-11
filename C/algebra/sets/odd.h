@@ -4,11 +4,12 @@
 
 #include "../../utils/number.h"
 #include "integer.h"
+#include "even.h"
 
 
 
 //---- Static constants
-#define N_RULES_ODD 1
+#define N_RULES_ODD 0
 #define N_RELATIONS_ODD_AND 1
 #define N_RELATIONS_ODD_OR 0
 
@@ -46,13 +47,13 @@ const Relations *get_relations_odd(const Set *self) {
     // AND relations
     const Relation and_1 = {
         .A = &Z,
-        .B = &E,
-        .type = OR
+        .B = &P,
+        .type = DIFF
     };
     const Relation **and_relations = get_relations_part(N_RELATIONS_ODD_AND, &and_1);
 
     // Rules
-    unsigned int *rules = get_rules(N_RULES_ODD, ONLY_ODD);
+    unsigned int *rules = get_rules(N_RULES_ODD);
 
     // All Relations
     relations_odd = get_relations(or_relations, and_relations,

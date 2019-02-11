@@ -91,14 +91,7 @@ const static char *expand_set(const Set *X) {
     unsigned int i;
     char *expanded = malloc(sizeof(char)*1000);
     const Relations *relations = X->relations(X);
-    for (i=0; i<relations->rules_length; i++) {
-        sprintf(expanded, "%s%s", i > 0 ? " " : "", rule_to_string(relations->rules_index[i]));
-    }
 
-    // And
-    if (relations->rules_length > 0 && relations->and_length > 0) {
-        sprintf(expanded, "%s | ", expanded);
-    }
     for (i=0; i<relations->and_length; i++) {
         const Relation *and = relations->and[i];
         const Set *A;
@@ -119,34 +112,47 @@ const static char *expand_set(const Set *X) {
             B = and->B;
         }
 
-        const char *expanded_and_A;
-        const char *expanded_and_B;
+        char *expanded_and_A = malloc(sizeof(char)*200);
+        char *expanded_and_B = malloc(sizeof(char)*200);
+
         if (is_dynamic(A)) {
-            expanded_and_A = expand_set(A);
+            sprintf(expanded_and_A, "(%s)", expand_set(A));
         } else {
-            expanded_and_A = A->symbol;
+            sprintf(expanded_and_A, "x ∈ %s", A->symbol);
         }
-        char *expanded_and_B_inner = malloc(sizeof(char)*200);
+
         if (B != NULL) {
             if (is_dynamic(B)) {
-                expanded_and_B = expand_set(B);
+                sprintf(expanded_and_B, " (%s x %s %s)",
+                        and->type == OR ? "∨" : "∧",
+                        and->type == DIFF ? "∉" : "∈",
+                        expand_set(B));
             } else {
-                expanded_and_B = B->symbol;
+                sprintf(expanded_and_B, " %s x %s %s",
+                        and->type == OR ? "∨" : "∧",
+                        and->type == DIFF ? "∉" : "∈",
+                        B->symbol);
             }
-            sprintf(expanded_and_B_inner, " %s x %s %s",
-                    and->type == OR ? "∨" : "∧",
-                    and->type == DIFF ? "∉" : "∈",
-                    expanded_and_B);
         } else {
-            expanded_and_B_inner[0] = '\0';
+            sprintf(expanded_and_B, "");
         }
-        sprintf(expanded, "%sx ∈ %s%s", expanded, expanded_and_A, expanded_and_B_inner);
+
+        sprintf(expanded, "%s%s%s", expanded, expanded_and_A, expanded_and_B);
     }
 
     // Or
     /*if ((relations->rules_length > 0 || relations->and_length > 0) && relations->or_length > 0) {
         sprintf(expanded, "%s ∨ ", expanded);
     }*/
+
+
+    // Rules
+    if (relations->rules_length > 0 && relations->and_length > 0) {
+        sprintf(expanded, "%s | ", expanded);
+    }
+    for (i=0; i<relations->rules_length; i++) {
+        sprintf(expanded, "%s%s%s", i > 0 ? " " : "", expanded, rule_to_string(relations->rules_index[i]));
+    }
 
     return expanded;
     /*for (i=0; i<relations->and_length; i++) {

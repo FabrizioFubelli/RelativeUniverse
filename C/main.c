@@ -73,6 +73,8 @@ void test_sets_2() {
     const Set *A_difference_C = set_difference(set_A, set_C);
     const Set *A_difference_D = set_difference(set_A, set_C);
     const Set *A_union_D = set_union(set_A, set_D);
+    const Set *E_union_C = set_union(set_A, set_C);
+    const Set *E_union_C_intersection_B = set_intersection(E_union_C, set_B);
     const Set *D_difference_A = set_difference(set_D, set_A);
     const Set *D_difference_E = set_difference(set_D, set_E);
     const Set *A_difference_F = set_difference(set_A, set_F);
@@ -85,7 +87,7 @@ void test_sets_2() {
     check_numbers(A_difference_B);
     check_numbers(A_difference_C);
 
-    printf("expand_set %s:\n", D_difference_E->symbol);
+    /*printf("expand_set %s:\n", D_difference_E->symbol);
     printf("%s\n\n", expand_set(D_difference_E));
 
     printf("expand_set %s:\n", set_C->symbol);
@@ -101,9 +103,26 @@ void test_sets_2() {
     printf("%s\n\n", expand_set(A_union_D));
 
     printf("expand_set %s:\n", set_A->symbol);
+    printf("%s\n\n", expand_set(set_A));*/
+
+    printf("expand_set %s:\n", set_A->symbol);
     printf("%s\n\n", expand_set(set_A));
 
-    /*printf("%s ⊆ %s = %d\n\n", A_intersection_B->symbol, set_A->symbol, is_subset(A_intersection_B, set_A));
+    printf("expand_set %s:\n", A_difference_B->symbol);
+    printf("%s\n\n", expand_set(A_difference_B));
+
+    printf("expand_set %s:\n", set_B->symbol);
+    printf("%s\n\n", expand_set(set_B));
+
+    printf("expand_set %s:\n", E_union_C_intersection_B->symbol);
+    printf("%s\n\n", expand_set(E_union_C_intersection_B));
+
+
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_difference_B->symbol, is_subset(set_A, A_difference_B));
+
+    /*
+
+    printf("%s ⊆ %s = %d\n\n", A_intersection_B->symbol, set_A->symbol, is_subset(A_intersection_B, set_A));
     printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_union_B->symbol, is_subset(set_A, A_union_B));
     printf("%s ⊆ %s = %d\n\n", A_difference_B->symbol, A_union_B->symbol, is_subset(A_difference_B, A_union_B));
     printf("%s ⊆ %s = %d\n\n", A_difference_B->symbol, set_B->symbol, is_subset(A_difference_B, set_B));
