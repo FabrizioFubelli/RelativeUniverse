@@ -121,21 +121,21 @@ static void print_set(const Set *set, const unsigned int left) {
 /*
  * @return `A ⊆ B`
 */
-static bool is_subset(const Set A, const Set B) {
-    if (strcmp(A.symbol, "E") == 0) { return true; }
-    if (strcmp(B.symbol, "E") == 0) { return false; }
-    if (strcmp(A.symbol, B.symbol) == 0) { return true; }
+static bool is_subset(const Set *A, const Set *B) {
+    if (strcmp(A->symbol, "E") == 0) { return true; }
+    if (strcmp(B->symbol, "E") == 0) { return false; }
+    if (strcmp(A->symbol, B->symbol) == 0) { return true; }
     unsigned int i;
-    const Relations *relations = A.relations();
+    const Relations *relations = A->relations();
     for (i=0; i<relations->and_length; i++) {
         const Relation *and = relations->and[i];
         if (and->type == OR) {
-            if ((strcmp(and->A->symbol, "E") != 0 && is_subset(*and->A, B)) ||
-                (strcmp(and->B->symbol, "E") != 0 && is_subset(*and->B, B))) {
+            if ((strcmp(and->A->symbol, "E") != 0 && is_subset(and->A, B)) ||
+                (strcmp(and->B->symbol, "E") != 0 && is_subset(and->B, B))) {
                 return true;
             }
         } else {
-            if (is_subset(*and->A, B) && is_subset(*and->B, B)) {
+            if (is_subset(and->A, B) && is_subset(and->B, B)) {
                 return true;
             }
         }
@@ -146,36 +146,36 @@ static bool is_subset(const Set A, const Set B) {
 /*
  * @return `A ⊇ B`
 */
-static bool is_superset(const Set A, const Set B) {
+static bool is_superset(const Set *A, const Set *B) {
     return is_subset(B, A);
 }
 
 /*
  * @return `A ⊂ B`
 */
-static bool is_proper_subset(const Set A, const Set B) {
-    return strcmp(A.symbol, B.symbol) != 0 && is_subset(A, B);
+static bool is_proper_subset(const Set *A, const Set *B) {
+    return strcmp(A->symbol, B->symbol) != 0 && is_subset(A, B);
 }
 
 /*
  * @return `A ⊃ B`
 */
-static bool is_proper_superset(const Set A, const Set B) {
-    return strcmp(A.symbol, B.symbol) != 0 && is_superset(A, B);
+static bool is_proper_superset(const Set *A, const Set *B) {
+    return strcmp(A->symbol, B->symbol) != 0 && is_superset(A, B);
 }
 
 /*
  * @return `A ∩ B`
 */
-static Set set_intersection(const Set A, const Set B) {
+static Set set_intersection(const Set *A, const Set *B) {
     const bool belongs_intersection(Number x) {
-        return A.belongs(x) && B.belongs(x);
+        return A->belongs(x) && B->belongs(x);
     }
     char symbol[50];
     strcpy(symbol, "(");
-    strcat(symbol, A.symbol);
+    strcat(symbol, A->symbol);
     strcat(symbol, "∩");
-    strcat(symbol, B.symbol);
+    strcat(symbol, B->symbol);
     strcat(symbol, ")");
     const Set C = {
         .symbol = symbol,
@@ -232,14 +232,7 @@ const static Set *set_union(const Set *A, const Set *B) {
     void dummy1() {}
     const Relations *get_relations_union() {
         const Set *set = get_set(index);
-        //printf("index = %u\n", index);
-        //printf("p = %lu\n", (unsigned long) p);
-        //printf("set = %p\n", set);
-        //printf("set->symbol = %s\n", set->symbol);
-        //printf("get_relations_union 1\n");
-        const Relations *relations = get_dynamic_relations(set->symbol);
-        //printf("get_relations_union 2\n");
-        return relations;
+        return get_dynamic_relations(set->symbol);
     }
     void dummy2() {}
 

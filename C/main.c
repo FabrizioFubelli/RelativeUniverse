@@ -75,8 +75,8 @@ void test_sets() {
         printf("\n");
         for (unsigned short j=0; j<SETS; j++) {
             const Set *set2 = sets[j];
-            printf("%s ⊆ %s = %d\n\n", set->symbol, set2->symbol, is_subset(*set, *set2));
-            printf("%s ⊂ %s = %d\n", set->symbol, set2->symbol, is_proper_subset(*set, *set2));
+            printf("%s ⊆ %s = %d\n\n", set->symbol, set2->symbol, is_subset(set, set2));
+            printf("%s ⊂ %s = %d\n", set->symbol, set2->symbol, is_proper_subset(set, set2));
             printf("\n");
             const Set *sets_union = set_union(set, set2);
             //print_set(sets_union, 0);
