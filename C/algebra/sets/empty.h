@@ -28,7 +28,7 @@ static Relations *relations_empty = NULL;
 
 //---- Main struct
 const static Set E = {
-    .symbol = "E",
+    .symbol = "Ø",
     .belongs = &belongs_to_set,
     .relations = &get_relations_empty,
 };

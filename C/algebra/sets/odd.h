@@ -1,9 +1,9 @@
-// Set of Even numbers (P)
+// Set of Odd numbers (D)
 #ifndef algebra_sets_odd_h
 #define algebra_sets_odd_h
 
 #include "../../utils/number.h"
-#include "natural.h"
+#include "integer.h"
 
 
 
@@ -45,7 +45,7 @@ const Relations *get_relations_odd(const Set *self) {
 
     // AND relations
     const Relation and_1 = {
-        .A = &N,
+        .A = &Z,
         .B = &E,
         .type = OR
     };

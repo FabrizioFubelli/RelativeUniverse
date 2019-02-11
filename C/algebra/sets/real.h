@@ -60,8 +60,6 @@ const Relations *get_relations_real(const Set *self) {
     relations_real = get_relations(or_relations, and_relations,
         N_RELATIONS_REAL_OR, N_RELATIONS_REAL_AND, rules, N_RULES_REAL);
 
-    printf("relations_real->and[%u]->type = %s\n", 0, relations_real->and[0]->type == AND ? "AND" : (relations_real->and[0]->type == OR ? "OR" : "UNKNOWN"));
-
     return relations_real;
 }
 

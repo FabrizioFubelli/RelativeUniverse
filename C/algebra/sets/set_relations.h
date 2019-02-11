@@ -8,8 +8,10 @@ typedef struct relation Relation;
 typedef struct relations Relations;
 typedef struct relation_map RelationMap;
 typedef enum relation_type {
-    AND=1, OR=2
+    AND=1, OR, DIFF
 } RelationType;
+static const char *type_to_string(RelationType type);
+static const char *type_to_symbol(RelationType type);
 
 struct relation_map {
     const char *key;
@@ -35,6 +37,32 @@ struct relations
     const Relation** and;
     const Relation** or;
 };
+
+static const char *type_to_symbol(RelationType type) {
+    switch (type) {
+        case AND:
+            return "∩";
+        case OR:
+            return "∪";
+        case DIFF:
+            return "-";
+        default:
+            return "?";
+    }
+}
+
+static const char *type_to_string(RelationType type) {
+    switch (type) {
+        case AND:
+            return "AND";
+        case OR:
+            return "OR";
+        case DIFF:
+            return "DIFF";
+        default:
+            return "UNKNOWN";
+    }
+}
 
 static void print_relation(const Relation *relation, const unsigned int left) {
     unsigned int i, s;
@@ -84,7 +112,7 @@ static void print_relations(const Relations *relations, const unsigned int left)
             const Relation *and = ands[i];
             const bool last = i == relations->and_length-1;
             printf("%s    %c  |\n", space, last ? ' ' : '|');
-            printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, and->type == OR ? "OR" : (and->type == AND ? "AND" : "UNKNOWN"));
+            printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, type_to_string(and->type));
             printf("%s    %c            |\n", space, last ? ' ' : '|');
             print_relation(and, left+17);
         }
@@ -98,7 +126,7 @@ static void print_relations(const Relations *relations, const unsigned int left)
             const bool last = i == relations->or_length-1;
             const Relation *or = relations->or[i];
             printf("%s    %c  |\n", space, last ? ' ' : '|');
-            printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, or->type == OR ? "OR" : (or->type == AND ? "AND" : "UNKNOWN"));
+            printf("%s    %c  |-- %u. Relation (type: %s)\n", space, last ? ' ' : '|', i+1, type_to_string(or->type));
             printf("%s    %c            |\n", space, last ? ' ' : '|');
             print_relation(or, left+17);
         }

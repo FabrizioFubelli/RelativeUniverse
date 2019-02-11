@@ -13,6 +13,7 @@
 
 void test_numbers();
 void test_sets();
+void test_sets_2();
 void test_files();
 void test_utils();
 
@@ -26,7 +27,8 @@ int main() {
      */
 
      //test_numbers();
-     test_sets();
+     //test_sets();
+     test_sets_2();
      //test_files();
      //test_utils();
      return 0;
@@ -45,24 +47,90 @@ void test_files() {
     Log.done("All done!");
 }
 
+void check_numbers(const Set *set) {
+    #define NUMBERS 6
+    const Number numbers[NUMBERS] = {
+        1234, 123.9087, -190, -43.322, 2148089043243, -191
+    };
+    for (unsigned short k=0; k<NUMBERS; k++) {
+        Number n = numbers[k];
+        printf("%s.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(set, n));
+    }
+    printf("\n");
+}
+
+void test_sets_2() {
+    printf("\n#---- test_sets_2\n\n");
+    const Set *set_A = &P;
+    const Set *set_B = &D;
+    const Set *set_C = &Z_;
+    const Set *set_D = &Z;
+    const Set *set_E = &N;
+    const Set *set_F = &E;
+    const Set *A_union_B = set_union(set_A, set_B);
+    const Set *A_intersection_B = set_intersection(set_A, set_B);
+    const Set *A_difference_B = set_difference(set_A, set_B);
+    const Set *A_difference_C = set_difference(set_A, set_C);
+    const Set *A_difference_D = set_difference(set_A, set_C);
+    const Set *A_union_D = set_union(set_A, set_D);
+    const Set *D_difference_A = set_difference(set_D, set_A);
+    const Set *D_difference_E = set_difference(set_D, set_E);
+    const Set *A_difference_F = set_difference(set_A, set_F);
+    const Set *A_union_F = set_union(set_A, set_F);
+    const Set *A_intersection_F = set_intersection(set_A, set_F);
+
+
+    check_numbers(A_union_B);
+    check_numbers(A_intersection_B);
+    check_numbers(A_difference_B);
+    check_numbers(A_difference_C);
+
+    printf("expand_set %s:\n", D_difference_E->symbol);
+    printf("%s\n\n", expand_set(D_difference_E));
+
+    printf("expand_set %s:\n", set_C->symbol);
+    printf("%s\n\n", expand_set(set_C));
+
+    printf("expand_set %s:\n", set_D->symbol);
+    printf("%s\n\n", expand_set(set_D));
+
+    printf("expand_set %s:\n", set_E->symbol);
+    printf("%s\n\n", expand_set(set_E));
+
+    printf("expand_set %s:\n", A_union_D->symbol);
+    printf("%s\n\n", expand_set(A_union_D));
+
+    printf("expand_set %s:\n", set_A->symbol);
+    printf("%s\n\n", expand_set(set_A));
+
+    /*printf("%s ⊆ %s = %d\n\n", A_intersection_B->symbol, set_A->symbol, is_subset(A_intersection_B, set_A));
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_union_B->symbol, is_subset(set_A, A_union_B));
+    printf("%s ⊆ %s = %d\n\n", A_difference_B->symbol, A_union_B->symbol, is_subset(A_difference_B, A_union_B));
+    printf("%s ⊆ %s = %d\n\n", A_difference_B->symbol, set_B->symbol, is_subset(A_difference_B, set_B));
+    printf("%s ⊆ %s = %d\n\n", A_union_B->symbol, set_B->symbol, is_subset(A_union_B, set_B));
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_difference_B->symbol, is_subset(set_A, A_difference_B));
+    printf("%s ⊆ %s = %d\n\n", A_intersection_B->symbol, A_union_B->symbol, is_subset(A_intersection_B, A_union_B));
+    printf("%s ⊆ %s = %d\n\n", A_intersection_B->symbol, set_B->symbol, is_subset(A_intersection_B, set_B));
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_intersection_B->symbol, is_subset(set_A, A_intersection_B));
+    printf("%s ⊆ %s = %d\n\n", set_C->symbol, A_union_D->symbol, is_subset(set_C, A_union_D));
+    printf("%s ⊆ %s = %d\n\n", set_C->symbol, D_difference_A->symbol, is_subset(set_C, D_difference_A));
+    printf("%s ⊆ %s = %d\n\n", set_C->symbol, D_difference_E->symbol, is_subset(set_C, D_difference_E));
+
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_difference_F->symbol, is_subset(set_A, A_difference_F));
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_difference_B->symbol, is_subset(set_A, A_difference_B));
+
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_intersection_F->symbol, is_subset(set_A, A_intersection_F));
+    printf("%s ⊆ %s = %d\n\n", set_A->symbol, A_union_F->symbol, is_subset(set_A, A_union_F));*/
+
+    //print_set(D_difference_E, 0);
+    //print_set(set_C, 0);
+    printf("\n#---- end test_sets_2\n\n");
+}
+
 void test_sets() {
     #define SETS 8
-    #define NUMBERS 5
 
-    printf("SETS = %hu\n", SETS);
     const Set *sets[SETS] = {&U, &R, &Z, &N, &P, &D, &Z_, &E};
-
-    printf("NUMBERS = %hu\n", NUMBERS);
-    const Number numbers[NUMBERS] = {
-        1234, 123.9087, -190, -43.322, 2148089043243
-    };
-
-    void check_numbers(const Set *set) {
-        for (unsigned short k=0; k<NUMBERS; k++) {
-            Number n = numbers[k];
-            printf("%s.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(set, n));
-        }
-    }
 
     const Set *sets_union_check;
     const Set *sets_intersection_check;

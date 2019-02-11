@@ -12,6 +12,7 @@ static char *rule_to_string(unsigned int index);
 #include "../../utils/number.h"
 
 static bool belongs_to_set(const Set *X, const Number x);
+static bool is_superset(const Set *A, const Set *B) ;
 static unsigned int *get_rules(unsigned int rules_length, ...);
 const static Relation **get_relations_part(const unsigned int relations_length, ...);
 static void update_dynamic_relations(char *set_symbol, Relations *relations);
@@ -62,26 +63,211 @@ static void print_set(const Set *set, const unsigned int left) {
     }
 }
 
+static bool is_union(const Set *X) {
+    return strstr(X->symbol, "∪") != NULL;
+}
+static bool is_intersaction(const Set *X) {
+    return strstr(X->symbol, "∩") != NULL;
+}
+static bool is_difference(const Set *X) {
+    return strstr(X->symbol, "-") != NULL;
+}
+
+static bool is_dynamic(const Set *X) {
+    return is_union(X) || is_intersaction(X) || is_difference(X);
+}
+
+static void print_sets(const Set **sets) {
+    printf("print_sets\n");
+    unsigned int i=0;
+    while (sets[i]) {
+        const Set *set = sets[i];
+        printf("Set: %s\n", set->symbol);
+        i++;
+    }
+}
+
+const static char *expand_set(const Set *X) {
+    unsigned int i;
+    char *expanded = malloc(sizeof(char)*1000);
+    const Relations *relations = X->relations(X);
+    for (i=0; i<relations->rules_length; i++) {
+        sprintf(expanded, "%s%s", i > 0 ? " " : "", rule_to_string(relations->rules_index[i]));
+    }
+
+    // And
+    if (relations->rules_length > 0 && relations->and_length > 0) {
+        sprintf(expanded, "%s | ", expanded);
+    }
+    for (i=0; i<relations->and_length; i++) {
+        const Relation *and = relations->and[i];
+        const Set *A;
+        const Set *B;
+        if (and->type == OR) {
+            if (strcmp(and->A->symbol, "Ø") == 0) {
+                A = and->B;
+                B = NULL;
+            } else if (strcmp(and->B->symbol, "Ø") == 0) {
+                A = and->A;
+                B = NULL;
+            } else {
+                A = and->A;
+                B = and->B;
+            }
+        } else {
+            A = and->A;
+            B = and->B;
+        }
+
+        const char *expanded_and_A;
+        const char *expanded_and_B;
+        if (is_dynamic(A)) {
+            expanded_and_A = expand_set(A);
+        } else {
+            expanded_and_A = A->symbol;
+        }
+        char *expanded_and_B_inner = malloc(sizeof(char)*200);
+        if (B != NULL) {
+            if (is_dynamic(B)) {
+                expanded_and_B = expand_set(B);
+            } else {
+                expanded_and_B = B->symbol;
+            }
+            sprintf(expanded_and_B_inner, " %s x %s %s",
+                    and->type == OR ? "∨" : "∧",
+                    and->type == DIFF ? "∉" : "∈",
+                    expanded_and_B);
+        } else {
+            expanded_and_B_inner[0] = '\0';
+        }
+        sprintf(expanded, "%sx ∈ %s%s", expanded, expanded_and_A, expanded_and_B_inner);
+    }
+
+    // Or
+    /*if ((relations->rules_length > 0 || relations->and_length > 0) && relations->or_length > 0) {
+        sprintf(expanded, "%s ∨ ", expanded);
+    }*/
+
+    return expanded;
+    /*for (i=0; i<relations->and_length; i++) {
+        const Relation *and = relations->and[i];
+        if (!is_dynamic(and->A)) {
+            insert_superset(and->A);
+        } else {
+            const Set **A_supersets = is_subset_of(and->A);
+            unsigned int j = 0;
+            while (A_supersets[j]) {
+                insert_superset(A_supersets[j]);
+                j++;
+            }
+        }
+        if (!is_dynamic(and->B)) {
+            insert_superset(and->B);
+        } else {
+            const Set **B_supersets = is_subset_of(and->B);
+            unsigned int j = 0;
+            while (B_supersets[j]) {
+                insert_superset(B_supersets[j]);
+                j++;
+            }
+        }
+    }
+    print_sets(supersets);
+    return supersets;*/
+}
+
+/*
+const static Set **is_subset_of(const Set *X) {
+    unsigned int i;
+    char expanded_supersets[1000];
+    const Set **supersets = (const Set**) malloc(sizeof(Set*));
+    unsigned int supersets_length = 0;
+    void insert_superset(const Set *set) {
+        for (unsigned int j=0; j<supersets_length; j++) {
+            if (strcmp(supersets[j]->symbol, set->symbol) == 0) {
+                return;
+            }
+        }
+        supersets = realloc(supersets, sizeof(Set*)*supersets_length+1);
+        supersets[supersets_length] = set;
+        supersets_length++;
+    }
+    const Relations *relations = X->relations(X);
+    for (i=0; i<relations->and_length; i++) {
+        const Relation *and = relations->and[i];
+        if (!is_dynamic(and->A)) {
+            insert_superset(and->A);
+        } else {
+            const Set **A_supersets = is_subset_of(and->A);
+            unsigned int j = 0;
+            while (A_supersets[j]) {
+                insert_superset(A_supersets[j]);
+                j++;
+            }
+        }
+        if (!is_dynamic(and->B)) {
+            insert_superset(and->B);
+        } else {
+            const Set **B_supersets = is_subset_of(and->B);
+            unsigned int j = 0;
+            while (B_supersets[j]) {
+                insert_superset(B_supersets[j]);
+                j++;
+            }
+        }
+    }
+    print_sets(supersets);
+    return supersets;
+}*/
+
 /*
  * @return `A ⊆ B`
 */
 static bool is_subset(const Set *A, const Set *B) {
-    if (strcmp(A->symbol, "E") == 0) { return true; }
-    if (strcmp(B->symbol, "E") == 0) { return false; }
+    if (strcmp(A->symbol, "Ø") == 0) { return true; }
+    if (strcmp(B->symbol, "Ø") == 0) { return false; }
     if (strcmp(A->symbol, B->symbol) == 0) { return true; }
     unsigned int i;
-    const Relations *relations = A->relations(A);
-    for (i=0; i<relations->and_length; i++) {
-        const Relation *and = relations->and[i];
-        if (and->type == OR) {
-            if ((strcmp(and->A->symbol, "E") != 0 && is_subset(and->A, B)) ||
-                (strcmp(and->B->symbol, "E") != 0 && is_subset(and->B, B))) {
-                return true;
+    if (is_union(B) || is_difference(B)) {
+        const Relations *B_relations = B->relations(B);
+        for (i=0; i<B_relations->and_length; i++) {
+            const Relation *and = B_relations->and[i];
+            //printf("[1] %s must be subset of %s%s%s\n", A->symbol, and->A->symbol, type_to_symbol(and->type), and->B->symbol);
+            if (and->type == OR) {
+                if ((strcmp(and->A->symbol, "Ø") != 0 && is_subset(A, and->A)) ||
+                    (strcmp(and->B->symbol, "Ø") != 0 && is_subset(A, and->B))) {
+                    return true;
+                }
+            } else if (and->type == DIFF) {
+                //printf("is_subset(%s, and->%s) = %d\n", A->symbol, and->A->symbol, is_subset(A, and->A));
+                if (is_subset(A, and->A) && (strcmp(and->B->symbol, "Ø") == 0)) {
+                    return true;
+                }
             }
-        } else {
+        }
+    }
+    const Relations *A_relations = A->relations(A);
+    for (i=0; i<A_relations->and_length; i++) {
+        const Relation *and = A_relations->and[i];
+        char symbol[50];
+        sprintf(symbol, "(%s%s%s)", and->A->symbol, type_to_symbol(and->type), and->B->symbol);
+        if (strcmp(symbol, B->symbol) == 0) {
+            return true;
+        }
+        if (and->type == OR) {
             if (is_subset(and->A, B) && is_subset(and->B, B)) {
                 return true;
             }
+        } else if (and->type == AND) {
+            //printf("FLAG 1b\n");
+            if (is_subset(and->A, B) || is_subset(and->B, B)) {
+                return true;
+            }
+        } else if (and->type == DIFF) {
+            if (is_subset(and->A, B)) {
+                return true;
+            }
+            //printf("FLAG 1c\n");
         }
     }
     return false;
@@ -115,7 +301,7 @@ static bool is_proper_superset(const Set *A, const Set *B) {
 
 const static Set *set_merge(const Set *A, const Set *B, RelationType type) {
     char *symbol = malloc(sizeof(char)*50);
-    sprintf(symbol, "(%s%s%s)", A->symbol, type == AND ? "∩" : "∪", B->symbol);
+    sprintf(symbol, "(%s%s%s)", A->symbol, type_to_symbol(type), B->symbol);
 
     // OR relations
     const Relation **or_relations = get_relations_part(N_RELATIONS_MERGE_OR);
@@ -163,6 +349,13 @@ const static Set *set_intersection(const Set *A, const Set *B) {
 }
 
 /*
+ * @return `A - B`
+*/
+const static Set *set_difference(const Set *A, const Set *B) {
+    return set_merge(A, B, DIFF);
+}
+
+/*
  * @return `P(X)`: all subsets of X
 */
 static Set set_power(const Set X) {
@@ -170,7 +363,7 @@ static Set set_power(const Set X) {
 }
 
 /*
- * @return `x ∊ X`
+ * @return `x ∈ X`
 */
 static bool belongs_to_set(const Set *X, const Number x) {
     unsigned int i;
@@ -186,16 +379,20 @@ static bool belongs_to_set(const Set *X, const Number x) {
         const Relation *and = relations->and[i];
         if (and->type == AND) {
             result = result && (and->A->belongs(and->A, x) && and->B->belongs(and->B, x));
-        } else {
+        } else if (and->type == OR) {
             result = result && (and->A->belongs(and->A, x) || and->B->belongs(and->B, x));
+        } else if (and->type == DIFF) {
+            result = result && (and->A->belongs(and->A, x) && !and->B->belongs(and->B, x));
         }
     }
     for (i=0; i<relations->or_length; i++) {
         const Relation *or = relations->or[i];
         if (or->type == AND) {
             result = result || (or->A->belongs(or->A, x) && or->B->belongs(or->B, x));
-        } else {
+        } else if (or->type == OR) {
             result = result || (or->A->belongs(or->A, x) || or->B->belongs(or->B, x));
+        } else if (or->type == DIFF) {
+            result = result && (or->A->belongs(or->A, x) && !or->B->belongs(or->B, x));
         }
     }
     return result;

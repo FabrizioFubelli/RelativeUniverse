@@ -19,20 +19,20 @@ static char *rule_to_string(unsigned int index) {
         case EMPTY:
         rule_name = "EMPTY"; break;
         case ONLY_INTEGERS:
-        rule_name = "ONLY_INTEGERS"; break;
+        rule_name = "int(x)"; break;
         case ONLY_NATURAL:
-        rule_name = "ONLY_NATURAL"; break;
+        rule_name = "0 <= x"; break;
         case ONLY_EVEN:
-        rule_name = "ONLY_EVEN"; break;
+        rule_name = "x \% 2 = 0"; break;
         case ONLY_ODD:
-        rule_name = "ONLY_ODD"; break;
+        rule_name = "x \% 2 != 0"; break;
         case ONLY_NEGATIVE:
-        rule_name = "ONLY_NEGATIVE"; break;
+        rule_name = "x < 0"; break;
         default:
         rule_name = "UNKNOWN"; break;
     }
     char *s_index = malloc(sizeof(char)*50);
-    sprintf(s_index, "%u) %s", index, rule_name);
+    sprintf(s_index, "%s", rule_name);
     return s_index;
 }
 
