@@ -65,6 +65,7 @@ void test_sets() {
     }
 
     const Set *sets_union_check;
+    const Set *sets_intersection_check;
 
     for (unsigned short i=0; i<SETS; i++) {
         const Set *set = sets[i];
@@ -79,19 +80,25 @@ void test_sets() {
             printf("%s ⊂ %s = %d\n", set->symbol, set2->symbol, is_proper_subset(set, set2));
             printf("\n");
             const Set *sets_union = set_union(set, set2);
+            const Set *sets_intersection = set_intersection(set, set2);
             //print_set(sets_union, 0);
-            if (i==4 && j == 2) {
+            if (i==5 && j == 6) {
                 sets_union_check = sets_union;
+                sets_intersection_check = sets_intersection;
             }
             check_numbers(sets_union);
             printf("\n");
+            check_numbers(sets_intersection);
+            printf("\n");
         }
-
         printf("\n\n");
     }
     printf("sets_union_check->symbol = %s\n", sets_union_check->symbol);
     print_set(sets_union_check, 0);
     check_numbers(sets_union_check);
+    printf("\n");
+    print_set(sets_intersection_check, 0);
+    check_numbers(sets_intersection_check);
 }
 
 

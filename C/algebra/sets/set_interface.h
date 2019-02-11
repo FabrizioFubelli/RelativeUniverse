@@ -152,35 +152,32 @@ static bool is_proper_superset(const Set *A, const Set *B) {
 }
 
 
-#define N_RELATIONS_UNION_OR 0
-#define N_RELATIONS_UNION_AND 1
-#define N_RULES_UNION 0
+#define N_RELATIONS_MERGE_OR 0
+#define N_RELATIONS_MERGE_AND 1
+#define N_RULES_MERGE 0
 
-/*
- * @return `A ∪ B`
-*/
-const static Set *set_union(const Set *A, const Set *B) {
+const static Set *set_merge(const Set *A, const Set *B, RelationType type) {
     const unsigned int index = DYNAMIC_SETS_LENGTH;
     char *symbol = malloc(sizeof(char)*50);
-    sprintf(symbol, "(%s∪%s)", A->symbol, B->symbol);
+    sprintf(symbol, "(%s%s%s)", A->symbol, type == AND ? "∩" : "∪", B->symbol);
 
     // OR relations
-    const Relation **or_relations = get_relations_part(N_RELATIONS_UNION_OR);
+    const Relation **or_relations = get_relations_part(N_RELATIONS_MERGE_OR);
 
     // AND relations
     const Relation and_1 = {
         .A = A,
         .B = B,
-        .type = OR
+        .type = type
     };
-    const Relation **and_relations = get_relations_part(N_RELATIONS_UNION_AND, &and_1);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_MERGE_AND, &and_1);
 
     // Rules
-    unsigned int *rules = get_rules(N_RULES_UNION);
+    unsigned int *rules = get_rules(N_RULES_MERGE);
 
     // All Relations
     Relations *relations_union = relations_union = get_relations(or_relations, and_relations,
-        N_RELATIONS_UNION_OR, N_RELATIONS_UNION_AND, rules, N_RULES_UNION);
+        N_RELATIONS_MERGE_OR, N_RELATIONS_MERGE_AND, rules, N_RULES_MERGE);
 
     update_dynamic_relations(symbol, relations_union);
 
@@ -197,24 +194,17 @@ const static Set *set_union(const Set *A, const Set *B) {
 }
 
 /*
+ * @return `A ∪ B`
+*/
+const static Set *set_union(const Set *A, const Set *B) {
+    return set_merge(A, B, OR);
+}
+
+/*
  * @return `A ∩ B`
 */
-static Set set_intersection(const Set *A, const Set *B) {
-    const bool belongs_intersection(const Set *self, Number x) {
-        return A->belongs(A, x) && B->belongs(B, x);
-    }
-    char symbol[50];
-    strcpy(symbol, "(");
-    strcat(symbol, A->symbol);
-    strcat(symbol, "∩");
-    strcat(symbol, B->symbol);
-    strcat(symbol, ")");
-    const Set C = {
-        .symbol = symbol,
-        .belongs = &belongs_intersection,
-        .relations = NULL
-    };
-    return C;
+const static Set *set_intersection(const Set *A, const Set *B) {
+    return set_merge(A, B, AND);
 }
 
 static void update_dynamic_relations(char *set_symbol, Relations *relations) {
