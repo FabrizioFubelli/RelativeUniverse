@@ -16,8 +16,7 @@
 
 
 //---- Function declarations
-const bool belongs_natural(const Number x);
-const Relations *get_relations_natural();
+const Relations *get_relations_natural(const Set *self);
 
 
 
@@ -29,7 +28,7 @@ static Relations *relations_natural = NULL;
 //---- Main struct
 const static Set N = {
     .symbol = "N",
-    .belongs = &belongs_natural,
+    .belongs = &belongs_to_set,
     .relations = &get_relations_natural,
 };
 
@@ -37,11 +36,7 @@ const static Set N = {
 
 //---- Function implementations
 
-const bool belongs_natural(const Number x) {
-    return belongs_to_set(x, &N);
-}
-
-const Relations *get_relations_natural() {
+const Relations *get_relations_natural(const Set *self) {
     if (relations_natural != NULL) {
         return relations_natural;
     }

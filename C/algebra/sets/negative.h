@@ -16,8 +16,7 @@
 
 
 //---- Function declarations
-const bool belongs_negative(const Number x);
-const Relations *get_relations_negative();
+const Relations *get_relations_negative(const Set *self);
 
 
 
@@ -29,7 +28,7 @@ static Relations *relations_negative = NULL;
 //---- Main struct
 const static Set Z_ = {
     .symbol = "Zˉ",
-    .belongs = &belongs_negative,
+    .belongs = &belongs_to_set,
     .relations = &get_relations_negative,
 };
 
@@ -37,16 +36,12 @@ const static Set Z_ = {
 
 //---- Function implementations
 
-const bool belongs_negative(const Number x) {
-    return belongs_to_set(x, &Z_);
-}
-
-const Relations *get_relations_negative() {
+const Relations *get_relations_negative(const Set *self) {
     if (relations_negative != NULL) {
         return relations_negative;
     }
 
-    //-- OR relations
+    // OR relations
     const Relation **or_relations = get_relations_part(N_RELATIONS_NEGATIVE_OR);
 
     // AND relations

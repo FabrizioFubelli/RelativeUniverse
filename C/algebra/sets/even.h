@@ -15,8 +15,7 @@
 
 
 //---- Function declarations
-const bool belongs_even(const Number x);
-const Relations *get_relations_even();
+const Relations *get_relations_even(const Set *self);
 
 
 
@@ -28,7 +27,7 @@ static Relations *relations_even = NULL;
 //---- Main struct
 const static Set P = {
     .symbol = "P",
-    .belongs = &belongs_even,
+    .belongs = &belongs_to_set,
     .relations = &get_relations_even,
 };
 
@@ -36,11 +35,7 @@ const static Set P = {
 
 //---- Function implementations
 
-const bool belongs_even(const Number x) {
-    return belongs_to_set(x, &P);
-}
-
-const Relations *get_relations_even() {
+const Relations *get_relations_even(const Set *self) {
     if (relations_even != NULL) {
         return relations_even;
     }

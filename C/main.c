@@ -60,7 +60,7 @@ void test_sets() {
     void check_numbers(const Set *set) {
         for (unsigned short k=0; k<NUMBERS; k++) {
             Number n = numbers[k];
-            printf("%s.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(n));
+            printf("%s.belongs(%Lf) = %d\n\n", set->symbol, n, set->belongs(set, n));
         }
     }
 
@@ -90,7 +90,8 @@ void test_sets() {
         printf("\n\n");
     }
     printf("sets_union_check->symbol = %s\n", sets_union_check->symbol);
-    sets_union_check->relations();
+    print_set(sets_union_check, 0);
+    check_numbers(sets_union_check);
 }
 
 

@@ -17,8 +17,7 @@
 
 
 //---- Function declarations
-const bool belongs_empty(const Number x);
-const Relations *get_relations_empty();
+const Relations *get_relations_empty(const Set *self);
 
 
 
@@ -30,7 +29,7 @@ static Relations *relations_empty = NULL;
 //---- Main struct
 const static Set E = {
     .symbol = "E",
-    .belongs = &belongs_empty,
+    .belongs = &belongs_to_set,
     .relations = &get_relations_empty,
 };
 
@@ -38,11 +37,7 @@ const static Set E = {
 
 //---- Function implementations
 
-const bool belongs_empty(const Number x) {
-    return belongs_to_set(x, &E);
-}
-
-const Relations *get_relations_empty() {
+const Relations *get_relations_empty(const Set *self) {
     if (relations_empty != NULL) {
         return relations_empty;
     }

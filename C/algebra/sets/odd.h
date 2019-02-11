@@ -15,8 +15,7 @@
 
 
 //---- Function declarations
-const bool belongs_odd(const Number x);
-const Relations *get_relations_odd();
+const Relations *get_relations_odd(const Set *self);
 
 
 
@@ -28,7 +27,7 @@ static Relations *relations_odd = NULL;
 //---- Main struct
 const static Set D = {
     .symbol = "D",
-    .belongs = &belongs_odd,
+    .belongs = &belongs_to_set,
     .relations = &get_relations_odd,
 };
 
@@ -36,11 +35,7 @@ const static Set D = {
 
 //---- Function implementations
 
-const bool belongs_odd(const Number x) {
-    return belongs_to_set(x, &D);
-}
-
-const Relations *get_relations_odd() {
+const Relations *get_relations_odd(const Set *self) {
     if (relations_odd != NULL) {
         return relations_odd;
     }
