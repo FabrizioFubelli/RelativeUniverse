@@ -48,7 +48,7 @@ const Relations *get_relations_real() {
     }
 
     //-- OR relations
-    Relation *or_relations = get_relations_part(N_RELATIONS_REAL_OR);
+    const Relation **or_relations = get_relations_part(N_RELATIONS_REAL_OR);
 
     // AND relations
     const Relation and_1 = {
@@ -56,7 +56,7 @@ const Relations *get_relations_real() {
         .B = &E,
         .type = OR
     };
-    Relation *and_relations = get_relations_part(N_RELATIONS_REAL_AND, and_1);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_REAL_AND, &and_1);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_REAL);
@@ -64,6 +64,8 @@ const Relations *get_relations_real() {
     // All Relations
     relations_real = get_relations(or_relations, and_relations,
         N_RELATIONS_REAL_OR, N_RELATIONS_REAL_AND, rules, N_RULES_REAL);
+
+    printf("relations_real->and[%u]->type = %s\n", 0, relations_real->and[0]->type == AND ? "AND" : (relations_real->and[0]->type == OR ? "OR" : "UNKNOWN"));
 
     return relations_real;
 }

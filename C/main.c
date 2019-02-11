@@ -46,11 +46,11 @@ void test_files() {
 }
 
 void test_sets() {
-    #define SETS 7
+    #define SETS 8
     #define NUMBERS 5
 
     printf("SETS = %hu\n", SETS);
-    const Set *sets[SETS] = {&U, &R, &Z, &N, &P, &D, &E};
+    const Set *sets[SETS] = {&U, &R, &Z, &N, &P, &D, &Z_, &E};
 
     printf("NUMBERS = %hu\n", NUMBERS);
     const Number numbers[NUMBERS] = {
@@ -64,6 +64,8 @@ void test_sets() {
         }
     }
 
+    const Set *sets_union_check;
+
     for (unsigned short i=0; i<SETS; i++) {
         const Set *set = sets[i];
         printf("\n\nTESTING \"%s\" SET\n\n", set->symbol);
@@ -71,20 +73,24 @@ void test_sets() {
         printf("\n\n");
         check_numbers(set);
         printf("\n");
-        for (unsigned short i=0; i<SETS; i++) {
-            const Set *set2 = sets[i];
-            printf("%s ⊆ %s = %d\n", set->symbol, set2->symbol, is_subset(*set, *set2));
+        for (unsigned short j=0; j<SETS; j++) {
+            const Set *set2 = sets[j];
+            printf("%s ⊆ %s = %d\n\n", set->symbol, set2->symbol, is_subset(*set, *set2));
             printf("%s ⊂ %s = %d\n", set->symbol, set2->symbol, is_proper_subset(*set, *set2));
-            if (strcmp(set2->symbol, set->symbol) != 0) {
-                const Set *sets_union = set_union(set, set2);
-                print_set(sets_union, 0);
-                //check_numbers(sets_union);
+            printf("\n");
+            const Set *sets_union = set_union(set, set2);
+            //print_set(sets_union, 0);
+            if (i==4 && j == 2) {
+                sets_union_check = sets_union;
             }
+            check_numbers(sets_union);
             printf("\n");
         }
 
         printf("\n\n");
     }
+    printf("sets_union_check->symbol = %s\n", sets_union_check->symbol);
+    sets_union_check->relations();
 }
 
 

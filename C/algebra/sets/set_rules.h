@@ -5,16 +5,19 @@
 #include <math.h>
 
 enum rule_numbers {
-    ONLY_INTEGERS=1,    // 1
-    ONLY_NATURAL,       // 2
-    ONLY_EVEN,          // 3
-    ONLY_ODD,           // 4
-    EMPTY,              // 5
+    EMPTY=1,            // 1
+    ONLY_INTEGERS,      // 2
+    ONLY_NATURAL,       // 3
+    ONLY_EVEN,          // 4
+    ONLY_ODD,           // 5
+    ONLY_NEGATIVE,      // 6
 };
 
 static char *rule_to_string(unsigned int index) {
     char *rule_name;
     switch (index) {
+        case EMPTY:
+        rule_name = "EMPTY"; break;
         case ONLY_INTEGERS:
         rule_name = "ONLY_INTEGERS"; break;
         case ONLY_NATURAL:
@@ -23,8 +26,8 @@ static char *rule_to_string(unsigned int index) {
         rule_name = "ONLY_EVEN"; break;
         case ONLY_ODD:
         rule_name = "ONLY_ODD"; break;
-        case EMPTY:
-        rule_name = "EMPTY"; break;
+        case ONLY_NEGATIVE:
+        rule_name = "ONLY_NEGATIVE"; break;
         default:
         rule_name = "UNKNOWN"; break;
     }
@@ -37,53 +40,63 @@ static char *rule_to_string(unsigned int index) {
 
 typedef bool (*Rule)(const Number x);
 
+static bool empty(const Number x);
 static bool only_integers(const Number x);
 static bool only_natural(const Number x);
 static bool only_even(const Number x);
 static bool only_odd(const Number x);
-static bool empty(const Number x);
+static bool only_negative(const Number x);
 
 static const Rule SET_RULES[] = {
+    [EMPTY] = empty,
     [ONLY_INTEGERS] = only_integers,
     [ONLY_NATURAL] = only_natural,
     [ONLY_EVEN] = only_even,
     [ONLY_ODD] = only_odd,
-    [EMPTY] = empty,
+    [ONLY_NEGATIVE] = only_negative
 };
+
 
 /*
  * 1
+*/
+static bool empty(const Number x) {
+    return false;
+}
+
+/*
+ * 2
 */
 static bool only_integers(const Number x) {
     return (x - ((long long int) x)) == 0;
 }
 
 /*
- * 2
+ * 3
 */
 static bool only_natural(const Number x) {
     return x >= (Number) 0;
 }
 
 /*
- * 3
+ * 4
 */
 static bool only_even(const Number x) {
     return remainder(x, 2) == 0;
 }
 
 /*
- * 4
+ * 5
 */
 static bool only_odd(const Number x) {
     return remainder(x, 2) != 0;
 }
 
 /*
- * 5
+ * 6
 */
-static bool empty(const Number x) {
-    return false;
+static bool only_negative(const Number x) {
+    return x < (Number) 0;
 }
 
 #endif

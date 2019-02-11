@@ -11,6 +11,7 @@
 #include "natural.h"
 #include "even.h"
 #include "odd.h"
+#include "negative.h"
 
 /*
 #include "complex.h"

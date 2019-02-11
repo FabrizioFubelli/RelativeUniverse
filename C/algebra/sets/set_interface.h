@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdarg.h>
+#include <dlfcn.h>
 
 typedef struct set Set;
 typedef struct map_set MapSet;
@@ -14,8 +15,8 @@ static char *rule_to_string(unsigned int index);
 
 static bool belongs_to_set(const Number x, const Set *X);
 static unsigned int *get_rules(unsigned int rules_length, ...);
-static Relation *get_relations_part(const unsigned int relations_length, ...);
-static Relations *get_relations(const Relation *or_r, const Relation *and_r,    \
+const static Relation **get_relations_part(const unsigned int relations_length, ...);
+static Relations *get_relations(const Relation **or_r, const Relation **and_r,    \
     const unsigned int or_length, const unsigned int and_length,                \
     const unsigned int *rules_index, const unsigned int rules_length);
 
@@ -37,33 +38,55 @@ struct set
 
 struct map_set {
     const char *key;
-    const Set *set;
+    const Set *value;
 };
+
+static void print_map_set() {
+    printf("print_map_set\n");
+    unsigned int i;
+    for (i=0; i<DYNAMIC_SETS_LENGTH; i++) {
+        const MapSet *map_set = DYNAMIC_SETS[i];
+        const Set *set = map_set->value;
+        //printf("fun_addr = %p\n", fun_addr);
+        printf("DYNAMIC_SETS[%u] = %p\n", i, set);
+        printf("set->symbol = %s\n", set->symbol);
+        printf("set->belongs = %p\n", set->belongs);
+        printf("set->relations = %p\n", set->relations);
+        printf("set <= set->belongs && set <= set->relations = %d\n",
+            (unsigned long) set <= (unsigned long) set->belongs &&
+            (unsigned long) set <= (unsigned long) set->relations);
+    }
+}
 
 static void put_set(const Set *set) {
     const MapSet map_set = {
         .key = set->symbol,
-        .set = set
+        .value = set
     };
     MapSet* map_set_ptr = (MapSet*) malloc(sizeof(MapSet));
     memcpy(map_set_ptr, (const void *) &map_set, sizeof(MapSet));
     DYNAMIC_SETS[DYNAMIC_SETS_LENGTH++] = map_set_ptr;
 }
 
-static const Set *get_set(void *fun_addr) {
+static const Set *get_set(const unsigned int index) {
     //printf("get_set(%d)\n", fun_addr);
+    if (0 <= index && index < DYNAMIC_SETS_LENGTH) {
+        return DYNAMIC_SETS[index]->value;
+    }
+    return NULL;
+    /*
     unsigned int i;
+
     for (i=0; i<DYNAMIC_SETS_LENGTH; i++) {
         const MapSet *map_set = DYNAMIC_SETS[i];
         const Set *set = map_set->set;
-        printf("fun_addr = %p\n", fun_addr);
-        printf("set->belongs = %p\n", set->belongs);
-        printf("set->relations = %p\n", set->relations);
-        if (set <= fun_addr  && (fun_addr <= set->belongs || fun_addr <= set->relations)) {
+        if ((unsigned long) set <= (unsigned long) fun_addr  && (
+            (unsigned long) fun_addr <= (unsigned long) set->belongs ||
+            (unsigned long) fun_addr <= (unsigned long) set->relations)) {
             return set;
         }
     }
-    return NULL;
+    return NULL;*/
 }
 
 #include "set_rules.h"
@@ -84,9 +107,9 @@ static void print_set(const Set *set, const unsigned int left) {
         printf("Set NULL\n", space);
         return;
     }
+    printf("Set (symbol: %s)\n", set->symbol);
     if (set->relations != NULL) {
         const Relations *relations = set->relations();
-        printf("Set (symbol: %s)\n", set->symbol);
         printf("    %s|\n", space);
         print_relations(relations, left+4);
     }
@@ -105,14 +128,14 @@ static bool is_subset(const Set A, const Set B) {
     unsigned int i;
     const Relations *relations = A.relations();
     for (i=0; i<relations->and_length; i++) {
-        const Relation and = relations->and[i];
-        if (and.type == OR) {
-            if ((strcmp(and.A->symbol, "E") != 0 && is_subset(*and.A, B)) ||
-                (strcmp(and.B->symbol, "E") != 0 && is_subset(*and.B, B))) {
+        const Relation *and = relations->and[i];
+        if (and->type == OR) {
+            if ((strcmp(and->A->symbol, "E") != 0 && is_subset(*and->A, B)) ||
+                (strcmp(and->B->symbol, "E") != 0 && is_subset(*and->B, B))) {
                 return true;
             }
         } else {
-            if (is_subset(*and.A, B) && is_subset(*and.B, B)) {
+            if (is_subset(*and->A, B) && is_subset(*and->B, B)) {
                 return true;
             }
         }
@@ -194,39 +217,28 @@ const static Relations *get_dynamic_relations(const char *set_symbol) {
 #define N_RELATIONS_UNION_AND 1
 #define N_RULES_UNION 0
 
-#define CALLFOO label ## __LINE__: get_fun_addr(&&label ## __LINE__);
-
-void *get_fun_addr(void *addr)
-{
-    printf("Caller address = %p\n", addr);
-    return addr;
-}
-
 /*
  * @return `A ∪ B`
 */
 const static Set *set_union(const Set *A, const Set *B) {
+    const unsigned int index = DYNAMIC_SETS_LENGTH;
     char *symbol = malloc(sizeof(char)*50);
     sprintf(symbol, "(%s∪%s)", A->symbol, B->symbol);
     const Set *C_ptr = (Set *) malloc(sizeof(Set));
     const bool belongs_union(Number x) {
-        get_set(0);
-        return belongs_to_set(x, C_ptr);
+        const Set *set = get_set(index);
+        return belongs_to_set(x, set);
     }
     void dummy1() {}
     const Relations *get_relations_union() {
-        CALLFOO;
-        get_set(0);
-        /*printf("get_relations_union 0\n");
-        printf("C_ptr = %d\n", C_ptr);*/
-
-        printf("C_ptr->symbol = %s\n", C_ptr->symbol);
+        const Set *set = get_set(index);
+        //printf("index = %u\n", index);
+        //printf("p = %lu\n", (unsigned long) p);
+        //printf("set = %p\n", set);
+        //printf("set->symbol = %s\n", set->symbol);
         //printf("get_relations_union 1\n");
-        const Relations *relations = get_dynamic_relations(C_ptr->symbol);
+        const Relations *relations = get_dynamic_relations(set->symbol);
         //printf("get_relations_union 2\n");
-        for (unsigned int i=0; i<relations->and_length; i++) {
-            const Relation *and = relations->and;
-        }
         return relations;
     }
     void dummy2() {}
@@ -237,10 +249,8 @@ const static Set *set_union(const Set *A, const Set *B) {
     const Relations *(*get_relations_union_ptr)() = malloc(4096);
     memcpy(get_relations_union_ptr, (const void*) &get_relations_union, (unsigned long) &dummy2 - (unsigned long) &get_relations_union);
 
-    printf("get_relations_union_ptr = %p\n", get_relations_union_ptr);
-
     // OR relations
-    Relation *or_relations = get_relations_part(N_RELATIONS_UNION_OR);
+    const Relation **or_relations = get_relations_part(N_RELATIONS_UNION_OR);
 
     // AND relations
     const Relation and_1 = {
@@ -248,7 +258,7 @@ const static Set *set_union(const Set *A, const Set *B) {
         .B = B,
         .type = OR
     };
-    Relation *and_relations = get_relations_part(N_RELATIONS_UNION_AND, and_1);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_UNION_AND, &and_1);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_UNION);
@@ -265,9 +275,8 @@ const static Set *set_union(const Set *A, const Set *B) {
         .relations = get_relations_union_ptr
     };
 
-    memcpy((void *) C_ptr, (const void *) &C, sizeof(C));
+    memcpy((void *) C_ptr, (const void *) &C, sizeof(Set));
     put_set(C_ptr);
-    printf("C_ptr = %p\n", C_ptr);
     return C_ptr;
 }
 
@@ -282,13 +291,8 @@ static Set set_power(const Set X) {
  * @return `x ∊ X`
 */
 static bool belongs_to_set(const Number x, const Set *X) {
-    printf("belongs_to_set\n");
-    printf("X = %d\n", X);
     unsigned int i;
-    printf("belongs_to_set 1\n");
-    printf("X->symbol = %s\n", X->symbol);
     const Relations *relations = X->relations();
-    printf("belongs_to_set 2\n");
     bool result = true;
     for (i=0; i<relations->rules_length; i++) {
         if (!SET_RULES[relations->rules_index[i]](x)) {
@@ -297,25 +301,25 @@ static bool belongs_to_set(const Number x, const Set *X) {
         }
     }
     for (i=0; i<relations->and_length; i++) {
-        const Relation and = relations->and[i];
-        if (and.type == AND) {
-            result = result && (and.A->belongs(x) && and.B->belongs(x));
+        const Relation *and = relations->and[i];
+        if (and->type == AND) {
+            result = result && (and->A->belongs(x) && and->B->belongs(x));
         } else {
-            result = result && (and.A->belongs(x) || and.B->belongs(x));
+            result = result && (and->A->belongs(x) || and->B->belongs(x));
         }
     }
     for (i=0; i<relations->or_length; i++) {
-        const Relation or = relations->or[i];
-        if (or.type == AND) {
-            result = result || (or.A->belongs(x) && or.B->belongs(x));
+        const Relation *or = relations->or[i];
+        if (or->type == AND) {
+            result = result || (or->A->belongs(x) && or->B->belongs(x));
         } else {
-            result = result || (or.A->belongs(x) || or.B->belongs(x));
+            result = result || (or->A->belongs(x) || or->B->belongs(x));
         }
     }
     return result;
 }
 
-static Relations *get_relations(const Relation *or_r, const Relation *and_r,
+static Relations *get_relations(const Relation **or_r, const Relation **and_r,
     const unsigned int or_length, const unsigned int and_length,
     const unsigned int *rules_index, const unsigned int rules_length) {
 
@@ -329,26 +333,28 @@ static Relations *get_relations(const Relation *or_r, const Relation *and_r,
     };
 
     Relations *relations = (Relations *) malloc(sizeof(Relations));
-    memcpy((void *) relations, &r, sizeof(Relations));
+    memcpy((void *) relations, (const void *) &r, sizeof(Relations));
 
     return relations;
 }
 
 
-static Relation *get_relations_part(const unsigned int relations_length, ...) {
+const static Relation **get_relations_part(const unsigned int relations_length, ...) {
 
     va_list valist;
     unsigned int i;
 
-    Relation *relations = (Relation *) malloc(sizeof(Relation)*relations_length);
+    const Relation **relations = (const Relation **) malloc(sizeof(Relation*)*relations_length);
 
     /* initialize valist for relations_length number of arguments */
     va_start(valist, relations_length);
 
     /* access all the arguments assigned to valist */
     for (i = 0; i < relations_length; i++) {
-        Relation r = va_arg(valist, Relation);
-        memcpy(relations+i, &r, sizeof(r));
+        const Relation *r = va_arg(valist, Relation*);
+        const Relation *relation = malloc(sizeof(Relation));
+        memcpy((void *) relation, (const void *) r, sizeof(Relation));
+        memcpy((void *) relations+i, (const void *) &relation, sizeof(Relation));
     }
 
     /* clean memory reserved for valist */
@@ -368,7 +374,7 @@ static unsigned int *get_rules(unsigned int rules_length, ...) {
     /* access all the arguments assigned to valist */
     for (i = 0; i < rules_length; i++) {
         unsigned int r = va_arg(valist, unsigned int);
-        memcpy(rules+i, &r, sizeof(r));
+        memcpy(rules+i, &r, sizeof(unsigned int));
     }
 
     /* clean memory reserved for valist */

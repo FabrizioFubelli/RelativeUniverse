@@ -48,7 +48,7 @@ const Relations *get_relations_integer() {
     }
 
     //-- OR relations
-    Relation *or_relations = get_relations_part(N_RELATIONS_INTEGER_OR);
+    const Relation **or_relations = get_relations_part(N_RELATIONS_INTEGER_OR);
 
     // AND relations
     const Relation and_1 = {
@@ -56,7 +56,7 @@ const Relations *get_relations_integer() {
         .B = &E,
         .type = OR
     };
-    Relation *and_relations = get_relations_part(N_RELATIONS_INTEGER_AND, and_1);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_INTEGER_AND, &and_1);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_INTEGER, ONLY_INTEGERS);

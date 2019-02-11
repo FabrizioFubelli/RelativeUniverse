@@ -48,10 +48,10 @@ const Relations *get_relations_empty() {
     }
 
     //-- OR relations
-    Relation *or_relations = get_relations_part(N_RELATIONS_EMPTY_OR);
+    const Relation **or_relations = get_relations_part(N_RELATIONS_EMPTY_OR);
 
     // AND relations
-    Relation *and_relations = get_relations_part(N_RELATIONS_EMPTY_AND);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_EMPTY_AND);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_EMPTY, EMPTY);

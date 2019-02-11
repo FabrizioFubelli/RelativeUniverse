@@ -47,11 +47,11 @@ const Relations *get_relations_universe() {
         return relations_universe;
     }
 
-    //-- OR relations
-    Relation *or_relations = get_relations_part(N_RELATIONS_UNIVERSE_OR);
+    // OR relations
+    const Relation **or_relations = get_relations_part(N_RELATIONS_UNIVERSE_OR);
 
     // AND relations
-    Relation *and_relations = get_relations_part(N_RELATIONS_UNIVERSE_AND);
+    const Relation **and_relations = get_relations_part(N_RELATIONS_UNIVERSE_AND);
 
     // Rules
     unsigned int *rules = get_rules(N_RULES_UNIVERSE);
