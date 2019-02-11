@@ -5,7 +5,6 @@
 #include <stdarg.h>
 
 typedef struct set Set;
-typedef struct map_set MapSet;
 static void print_set(const Set *set, const unsigned int left);
 static char *rule_to_string(unsigned int index);
 
@@ -21,13 +20,10 @@ static Relations *get_relations(const Relation **or_r, const Relation **and_r,  
     const unsigned int or_length, const unsigned int and_length,                \
     const unsigned int *rules_index, const unsigned int rules_length);
 
-#define MAX_DYNAMIC_SETS 100000
+#define MAX_DYNAMIC_RELATIONS 100000
 
 static unsigned int DYNAMIC_RELATIONS_LENGTH = 0;
-static RelationMap *DYNAMIC_RELATIONS[MAX_DYNAMIC_SETS];
-
-static unsigned int DYNAMIC_SETS_LENGTH = 0;
-static MapSet *DYNAMIC_SETS[MAX_DYNAMIC_SETS];
+static RelationMap *DYNAMIC_RELATIONS[MAX_DYNAMIC_RELATIONS];
 
 /* Set of Objects */
 struct set
@@ -36,45 +32,6 @@ struct set
     const bool (*belongs)(const Set *self, const Number n);
     const Relations *(*relations)(const Set *self);
 };
-
-struct map_set {
-    const char *key;
-    const Set *value;
-};
-
-static void print_map_set() {
-    printf("print_map_set\n");
-    unsigned int i;
-    for (i=0; i<DYNAMIC_SETS_LENGTH; i++) {
-        const MapSet *map_set = DYNAMIC_SETS[i];
-        const Set *set = map_set->value;
-        //printf("fun_addr = %p\n", fun_addr);
-        printf("DYNAMIC_SETS[%u] = %p\n", i, set);
-        printf("set->symbol = %s\n", set->symbol);
-        printf("set->belongs = %p\n", set->belongs);
-        printf("set->relations = %p\n", set->relations);
-        printf("set <= set->belongs && set <= set->relations = %d\n",
-            (unsigned long) set <= (unsigned long) set->belongs &&
-            (unsigned long) set <= (unsigned long) set->relations);
-    }
-}
-
-static void put_set(const Set *set) {
-    const MapSet map_set = {
-        .key = set->symbol,
-        .value = set
-    };
-    MapSet* map_set_ptr = (MapSet*) malloc(sizeof(MapSet));
-    memcpy(map_set_ptr, (const void *) &map_set, sizeof(MapSet));
-    DYNAMIC_SETS[DYNAMIC_SETS_LENGTH++] = map_set_ptr;
-}
-
-static const Set *get_set(const unsigned int index) {
-    if (0 <= index && index < DYNAMIC_SETS_LENGTH) {
-        return DYNAMIC_SETS[index]->value;
-    }
-    return NULL;
-}
 
 #include "set_rules.h"
 
@@ -157,7 +114,6 @@ static bool is_proper_superset(const Set *A, const Set *B) {
 #define N_RULES_MERGE 0
 
 const static Set *set_merge(const Set *A, const Set *B, RelationType type) {
-    const unsigned int index = DYNAMIC_SETS_LENGTH;
     char *symbol = malloc(sizeof(char)*50);
     sprintf(symbol, "(%s%s%s)", A->symbol, type == AND ? "∩" : "∪", B->symbol);
 
@@ -189,7 +145,6 @@ const static Set *set_merge(const Set *A, const Set *B, RelationType type) {
 
     const Set *C_ptr = (Set *) malloc(sizeof(Set));
     memcpy((void *) C_ptr, (const void *) &C, sizeof(Set));
-    put_set(C_ptr);
     return C_ptr;
 }
 
@@ -205,34 +160,6 @@ const static Set *set_union(const Set *A, const Set *B) {
 */
 const static Set *set_intersection(const Set *A, const Set *B) {
     return set_merge(A, B, AND);
-}
-
-static void update_dynamic_relations(char *set_symbol, Relations *relations) {
-    unsigned int i;
-    for (i=0; i<DYNAMIC_RELATIONS_LENGTH; i++) {
-        if (strcmp(DYNAMIC_RELATIONS[i]->key, set_symbol) == 0) {
-            return;
-        }
-    }
-    RelationMap *map_ptr = malloc(sizeof(RelationMap));
-    const RelationMap map = {
-        .key = set_symbol,
-        .value = relations
-    };
-    memcpy((void *) map_ptr, &map, sizeof(RelationMap));
-    DYNAMIC_RELATIONS[DYNAMIC_RELATIONS_LENGTH] = map_ptr;
-    DYNAMIC_RELATIONS_LENGTH++;
-}
-
-const static Relations *get_dynamic_relations(const Set *set) {
-    unsigned int i;
-    for (i=0; i<DYNAMIC_RELATIONS_LENGTH; i++) {
-        if (strcmp(DYNAMIC_RELATIONS[i]->key, set->symbol) == 0) {
-            const Relations *relations = DYNAMIC_RELATIONS[i]->value;
-            return relations;
-        }
-    }
-    return NULL;
 }
 
 /*
@@ -295,7 +222,6 @@ static Relations *get_relations(const Relation **or_r, const Relation **and_r,
 
 
 const static Relation **get_relations_part(const unsigned int relations_length, ...) {
-
     va_list valist;
     unsigned int i;
 
@@ -335,6 +261,38 @@ static unsigned int *get_rules(unsigned int rules_length, ...) {
     /* clean memory reserved for valist */
     va_end(valist);
     return rules;
+}
+
+static void update_dynamic_relations(char *set_symbol, Relations *relations) {
+    unsigned int i;
+    if (MAX_DYNAMIC_RELATIONS <= DYNAMIC_RELATIONS_LENGTH) {
+        Log.error("Too many dynamic relations!");
+        exit(0);
+    }
+    for (i=0; i<DYNAMIC_RELATIONS_LENGTH; i++) {
+        if (strcmp(DYNAMIC_RELATIONS[i]->key, set_symbol) == 0) {
+            return;
+        }
+    }
+    RelationMap *map_ptr = malloc(sizeof(RelationMap));
+    const RelationMap map = {
+        .key = set_symbol,
+        .value = relations
+    };
+    memcpy((void *) map_ptr, &map, sizeof(RelationMap));
+    DYNAMIC_RELATIONS[DYNAMIC_RELATIONS_LENGTH] = map_ptr;
+    DYNAMIC_RELATIONS_LENGTH++;
+}
+
+const static Relations *get_dynamic_relations(const Set *set) {
+    unsigned int i;
+    for (i=0; i<DYNAMIC_RELATIONS_LENGTH; i++) {
+        if (strcmp(DYNAMIC_RELATIONS[i]->key, set->symbol) == 0) {
+            const Relations *relations = DYNAMIC_RELATIONS[i]->value;
+            return relations;
+        }
+    }
+    return NULL;
 }
 
 #endif
