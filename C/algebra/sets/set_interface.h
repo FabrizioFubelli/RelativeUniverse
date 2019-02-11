@@ -16,7 +16,7 @@ static unsigned int *get_rules(unsigned int rules_length, ...);
 const static Relation **get_relations_part(const unsigned int relations_length, ...);
 static void update_dynamic_relations(char *set_symbol, Relations *relations);
 const static Relations *get_dynamic_relations(const Set *self);
-static Relations *get_relations(const Relation **or_r, const Relation **and_r,    \
+static Relations *get_relations(const Relation **or_r, const Relation **and_r,  \
     const unsigned int or_length, const unsigned int and_length,                \
     const unsigned int *rules_index, const unsigned int rules_length);
 
