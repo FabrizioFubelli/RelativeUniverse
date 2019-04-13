@@ -398,7 +398,7 @@ static bool belongs_to_set(const Set *X, const Number x) {
         } else if (or->type == OR) {
             result = result || (or->A->belongs(or->A, x) || or->B->belongs(or->B, x));
         } else if (or->type == DIFF) {
-            result = result && (or->A->belongs(or->A, x) && !or->B->belongs(or->B, x));
+            result = result || (or->A->belongs(or->A, x) && !or->B->belongs(or->B, x));
         }
     }
     return result;
